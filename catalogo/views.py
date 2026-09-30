@@ -29,6 +29,39 @@ def dashboard(request):
     return render(request, 'catalogo/dashboard.html', contexto)
 
 
+# ------------------------------------------------------------------ detalhes
+# Cada página abaixo é a prova visual de uma relação 1:N: o filme mostra suas
+# avaliações, o diretor e o gênero mostram seus filmes.
+
+def detalhe_filme(request, pk):
+    filme = get_object_or_404(
+        Filme.objects.select_related('genero', 'diretor'), pk=pk
+    )
+    avaliacoes = filme.avaliacoes.all()
+    return render(request, 'catalogo/filme_detalhe.html', {
+        'filme': filme,
+        'avaliacoes': avaliacoes,
+        'media': avaliacoes.aggregate(m=Avg('nota'))['m'],
+        'do_mesmo_diretor': filme.diretor.filmes.exclude(pk=filme.pk).select_related('genero'),
+    })
+
+
+def detalhe_diretor(request, pk):
+    diretor = get_object_or_404(Diretor, pk=pk)
+    return render(request, 'catalogo/diretor_detalhe.html', {
+        'diretor': diretor,
+        'filmes': diretor.filmes.select_related('genero').annotate(media=Avg('avaliacoes__nota')),
+    })
+
+
+def detalhe_genero(request, pk):
+    genero = get_object_or_404(Genero, pk=pk)
+    return render(request, 'catalogo/genero_detalhe.html', {
+        'genero': genero,
+        'filmes': genero.filmes.select_related('diretor').annotate(media=Avg('avaliacoes__nota')),
+    })
+
+
 # -------------------------------------------------------------------- filmes
 
 def lista_filmes(request):

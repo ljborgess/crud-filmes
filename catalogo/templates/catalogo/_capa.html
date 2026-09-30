@@ -1,0 +1,12 @@
+{% comment %}
+Capa autoral de um filme. Recebe `filme`.
+A matiz vem do gênero e fica na faixa do laranja de cátodo, então dois gêneros
+se distinguem sem que a capa saia das duas cores do sistema.
+{% endcomment %}
+<div class="capa" style="--matiz: {{ filme.genero.matiz }}; --inclinacao: {{ filme.genero.inclinacao }}deg" aria-hidden="true">
+    <span class="capa-campo"></span>
+    <span class="capa-malha"></span>
+    <span class="capa-genero">{{ filme.genero }}</span>
+    <span class="capa-titulo">{{ filme.titulo }}</span>
+    <span class="capa-diretor">{{ filme.diretor }}</span>
+</div>

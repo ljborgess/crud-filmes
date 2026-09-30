@@ -14,12 +14,13 @@
     {% for diretor in diretores %}
     <article class="registro">
         <span class="indice">{{ forloop.counter|stringformat:"02d" }}</span>
-        <h2>{{ diretor.nome }}</h2>
+        <h2><a href="{% url 'detalhe_diretor' diretor.pk %}">{{ diretor.nome }}</a></h2>
         <div><span class="atributo">{{ diretor.nacionalidade }}</span></div>
         <div class="medida-linha" style="margin-top:14px;">
             <strong>{{ diretor.total_filmes }}</strong> filme{{ diretor.total_filmes|pluralize }} no catálogo
         </div>
         <div class="acoes">
+            <a href="{% url 'detalhe_diretor' diretor.pk %}" class="acao">Abrir</a>
             <a href="{% url 'editar_diretor' diretor.pk %}" class="acao">Editar</a>
             <a href="{% url 'excluir_diretor' diretor.pk %}" class="acao acao-recusa">Excluir</a>
         </div>

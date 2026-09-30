@@ -13,6 +13,25 @@ class Genero(models.Model):
     def __str__(self):
         return self.nome
 
+    @property
+    def _semente(self):
+        return sum((indice + 1) * ord(letra) for indice, letra in enumerate(self.nome))
+
+    @property
+    def matiz(self):
+        """Matiz da capa dos filmes deste gênero.
+
+        Fica entre 6 e 54 graus de propósito: é a faixa do âmbar ao laranja de
+        cátodo, então gêneros se distinguem sem sair das duas cores do sistema.
+        """
+        return 6 + self._semente % 49
+
+    @property
+    def inclinacao(self):
+        """Ângulo do campo de cor na capa, para gêneros de matiz vizinha não
+        ficarem idênticos."""
+        return 160 + self._semente % 61
+
 
 class Diretor(models.Model):
     nome = models.CharField(max_length=100)

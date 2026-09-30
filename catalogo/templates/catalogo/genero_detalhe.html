@@ -1,0 +1,35 @@
+{% extends 'catalogo/base.html' %}
+
+{% block titulo %}{{ genero.nome }} · Catálogo de Filmes{% endblock %}
+
+{% block conteudo %}
+<div class="cabeca">
+    <div>
+        <span class="rotulo">Gênero</span>
+        <h1>{{ genero.nome }}</h1>
+    </div>
+    <div class="acoes">
+        <a href="{% url 'editar_genero' genero.pk %}" class="acao">Editar</a>
+        <a href="{% url 'excluir_genero' genero.pk %}" class="acao acao-recusa">Excluir</a>
+    </div>
+</div>
+
+<div class="vinculos">
+    <span class="vinculo"><span>No catálogo</span>{{ filmes|length }} filme{{ filmes|length|pluralize }}</span>
+</div>
+
+<h2 class="faixa-titulo">Filmes deste gênero</h2>
+<div class="grade">
+    {% for filme in filmes %}
+    <a href="{% url 'detalhe_filme' filme.pk %}" class="cartaz">
+        {% include 'catalogo/_capa.html' with filme=filme %}
+        <div class="abaixo">
+            <span class="nome">{{ filme.titulo }}</span>
+            {% if filme.media %}<span class="nota">{{ filme.media|floatformat:1 }}</span>{% endif %}
+        </div>
+    </a>
+    {% empty %}
+    <p class="vazio">Nenhum filme neste gênero</p>
+    {% endfor %}
+</div>
+{% endblock %}

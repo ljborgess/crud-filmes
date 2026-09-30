@@ -10,28 +10,15 @@
     </div>
 </div>
 
-<div class="registros">
+<div class="grade">
     {% for filme in filmes %}
-    <article class="registro">
-        <span class="indice">{{ forloop.counter|stringformat:"02d" }}</span>
-        <h2>{{ filme.titulo }}</h2>
-        <div>
-            <span class="atributo">{{ filme.genero }}</span>
-            <span class="atributo">{{ filme.diretor }}</span>
+    <a href="{% url 'detalhe_filme' filme.pk %}" class="cartaz">
+        {% include 'catalogo/_capa.html' with filme=filme %}
+        <div class="abaixo">
+            <span class="nome">{{ filme.titulo }}</span>
+            {% if filme.media %}<span class="nota">{{ filme.media|floatformat:1 }}</span>{% endif %}
         </div>
-        <p class="corpo">{{ filme.sinopse }}</p>
-        <div class="medida-linha">
-            {% if filme.media %}
-                Média <strong>{{ filme.media|floatformat:1 }}</strong> · {{ filme.total_avaliacoes }} avaliação{{ filme.total_avaliacoes|pluralize:"ões" }}
-            {% else %}
-                Sem avaliações
-            {% endif %}
-        </div>
-        <div class="acoes">
-            <a href="{% url 'editar_filme' filme.pk %}" class="acao">Editar</a>
-            <a href="{% url 'excluir_filme' filme.pk %}" class="acao acao-recusa">Excluir</a>
-        </div>
-    </article>
+    </a>
     {% empty %}
     <p class="vazio">Nenhum filme cadastrado</p>
     {% endfor %}

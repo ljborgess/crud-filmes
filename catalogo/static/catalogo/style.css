@@ -44,21 +44,16 @@ body {
 
 .gauze {
     position: fixed;
-    inset: -10vh -10vw;
+    inset: 0;
     z-index: 0;
     pointer-events: none;
+    /* chao limpo: so a luz do catodo, sem trama */
     background-image:
-        repeating-linear-gradient(0deg, var(--malha) 0 1px, transparent 1px 4px),
-        repeating-linear-gradient(90deg, var(--malha) 0 1px, transparent 1px 4px),
-        radial-gradient(ellipse 80% 55% at 68% 22%, rgba(255, 122, 28, 0.12), transparent 70%),
-        radial-gradient(ellipse 60% 50% at 10% 85%, rgba(200, 160, 106, 0.07), transparent 70%);
-    mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, #000 35%, transparent 100%);
-    animation: deriva 32s linear infinite;
+        radial-gradient(ellipse 70% 50% at 72% 14%, rgba(255, 122, 28, 0.13), transparent 68%),
+        radial-gradient(ellipse 55% 45% at 8% 88%, rgba(200, 160, 106, 0.06), transparent 70%);
 }
 
-@keyframes deriva {
-    to { transform: translate3d(4px, 4px, 0); }
-}
+
 
 /* --- tipografia --------------------------------------------------------- */
 
@@ -231,41 +226,12 @@ h2.faixa-titulo {
     animation-delay: var(--atraso, 0ms);
 }
 
-/* as irmãs apagadas: mesmo numeral, empilhado atrás em profundidade */
-.medida .fantasmas {
-    position: absolute;
-    top: 26px;
-    left: 0;
-    pointer-events: none;
-    display: block;
-    font-family: 'Saira Condensed', sans-serif;
-    font-weight: 900;
-    font-size: clamp(3.6rem, 8vw, 6.4rem);
-    line-height: 0.92;
-    letter-spacing: -0.02em;
-    color: transparent;
-    -webkit-text-stroke: 1.5px var(--fantasma-fraco);
-}
-
-/* as irmãs ficam em profundidades diferentes, nunca alinhadas */
-.medida .fantasmas span {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
-}
-
-.medida .fantasmas span:nth-child(1) { transform: translate(7px, -5px) scale(0.97); opacity: 0.9; }
-.medida .fantasmas span:nth-child(2) { transform: translate(-6px, 4px) scale(1.04); opacity: 0.55; }
-.medida .fantasmas span:nth-child(3) { transform: translate(12px, 8px) scale(0.92); opacity: 0.35; }
-
 .medida .rotulo { margin-top: 10px; display: block; }
 
 .medida:hover .numeral {
     filter: drop-shadow(0 0 30px rgba(255, 122, 28, 0.95));
 }
 
-.medida:hover .fantasmas span { color: transparent; }
 
 @keyframes golpear {
     0%   { opacity: 0; filter: blur(6px); }
@@ -506,7 +472,7 @@ h2.faixa-titulo {
 .acao-forte::after { transform: scaleX(1); opacity: 0.45; }
 .acao-forte:hover::after { opacity: 1; }
 
-.acao-recusa { color: var(--recusa); }
+.acao-recusa { color: rgba(239, 231, 218, 0.55); }
 .acao-recusa:hover, .acao-recusa:focus-visible { color: #ff5a3c; text-shadow: 0 0 16px rgba(255, 90, 60, 0.5); }
 
 /* --- formulário: campos sem caixa, só a base acesa ---------------------- */
@@ -690,10 +656,219 @@ input, textarea, select { caret-color: var(--golpe); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .gauze { animation: none; }
     *, *::before, *::after {
         animation-duration: 1ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 1ms !important;
     }
+}
+
+/* --- capa autoral do filme ---------------------------------------------- */
+
+.capa {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    background: var(--fundo-fundo);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 12% 10% 11%;
+    transition: transform var(--beat) var(--saida);
+}
+
+/* o campo de cor: uma diagonal do gênero cortando o terço superior */
+.capa-campo {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(var(--inclinacao, 197deg),
+            hsl(var(--matiz) 92% 54%) 0%,
+            hsl(var(--matiz) 86% 38%) 38%,
+            transparent 62%);
+}
+
+/* a mesma trama das letras, agora sobre o campo */
+.capa-malha {
+    position: absolute;
+    inset: 0;
+    background-image:
+        repeating-linear-gradient(0deg, rgba(4, 6, 12, 0.5) 0 1px, transparent 1px 4px),
+        repeating-linear-gradient(90deg, rgba(4, 6, 12, 0.32) 0 1px, transparent 1px 4px);
+}
+
+.capa-genero,
+.capa-titulo,
+.capa-diretor { position: relative; }
+
+.capa-genero {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    font-size: clamp(0.56rem, 1vw, 0.72rem);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--osso);
+    opacity: 0.75;
+    margin-bottom: 0.7em;
+}
+
+.capa-titulo {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: clamp(1.05rem, 2.1vw, 1.75rem);
+    line-height: 0.96;
+    letter-spacing: -0.02em;
+    color: var(--osso);
+    text-wrap: balance;
+}
+
+.capa-diretor {
+    font-family: 'Barlow', sans-serif;
+    font-size: clamp(0.62rem, 0.95vw, 0.78rem);
+    color: var(--osso-fraco);
+    margin-top: 0.55em;
+}
+
+/* --- grade de capas ------------------------------------------------------ */
+
+.grade {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 190px), 1fr));
+    gap: clamp(22px, 2.6vw, 38px);
+}
+
+.cartaz { text-decoration: none; display: block; }
+
+.cartaz .abaixo {
+    margin-top: 12px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.cartaz .abaixo .nome {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+    color: var(--osso);
+    transition: color var(--beat) var(--saida);
+}
+
+.cartaz .abaixo .nota {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    color: var(--golpe);
+    white-space: nowrap;
+}
+
+.cartaz:hover .capa { transform: translateY(-6px); }
+.cartaz:hover .abaixo .nome { color: var(--golpe); }
+
+/* --- página de detalhe --------------------------------------------------- */
+
+.detalhe-topo {
+    display: grid;
+    grid-template-columns: minmax(0, 240px) minmax(0, 1fr);
+    gap: clamp(28px, 4vw, 60px);
+    align-items: start;
+    margin-bottom: clamp(36px, 5vw, 64px);
+}
+
+.detalhe-topo .titulo {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: clamp(2rem, 6vw, 4.6rem);
+    line-height: 1.02;
+    padding-top: 0.06em;
+    letter-spacing: -0.03em;
+    margin: 0 0 14px;
+    max-width: calc(100vw - 2.6rem);
+    background-image:
+        repeating-linear-gradient(0deg, rgba(4, 6, 12, 0.62) 0 1px, transparent 1px 4px),
+        repeating-linear-gradient(90deg, rgba(4, 6, 12, 0.4) 0 1px, transparent 1px 4px),
+        linear-gradient(var(--osso), var(--osso));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.detalhe-topo .sinopse {
+    color: var(--osso-fraco);
+    font-size: 1.02rem;
+    margin: 18px 0 24px;
+}
+
+.vinculos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 26px;
+    margin-bottom: 20px;
+}
+
+.vinculo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    font-size: 0.82rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--golpe-claro);
+    text-decoration: none;
+    transition: color var(--beat) var(--saida);
+}
+
+.vinculo:hover { color: var(--golpe); }
+.vinculo span { color: var(--osso-fraco); margin-right: 0.5em; }
+
+.media-grande {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1;
+    color: var(--golpe);
+    filter: drop-shadow(0 0 16px rgba(255, 122, 28, 0.5));
+}
+
+/* lista de avaliações dentro do detalhe */
+.avaliacao-linha { padding: 20px 0; max-width: 72ch; }
+
+.avaliacao-linha .cabecalho {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 7px;
+}
+
+.avaliacao-linha .autor {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 1.05rem;
+    color: var(--osso);
+}
+
+.avaliacao-linha .quando {
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-size: 0.74rem;
+    color: var(--recusa);
+}
+
+.avaliacao-linha .texto { color: var(--osso-fraco); font-size: 0.95rem; margin: 0; }
+
+@media (max-width: 720px) {
+    .detalhe-topo {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 24px;
+    }
+    .detalhe-topo .capa-lugar { max-width: 200px; }
+    .grade { grid-template-columns: repeat(auto-fill, minmax(min(100%, 140px), 1fr)); }
 }

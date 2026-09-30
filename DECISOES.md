@@ -132,3 +132,55 @@ Construído **depois** do código, não durante.
 ## Pendência
 
 O **enunciado oficial no Teams ainda não foi conferido**. Estas decisões partiram do recado repassado pelo grupo. Requisitos como autenticação, upload de imagem ou deploy mudariam parte do plano.
+
+---
+
+# Segunda rodada — telas de detalhe e capas
+
+## 16. Sem réplica da Netflix
+
+O pedido inicial era replicar o front-end da Netflix por completo. **Recusado**, por dois motivos: entregar como trabalho próprio a identidade visual de uma empresa é problema de integridade acadêmica, ainda mais quando a nota pode substituir a da prova; e o visual da Netflix é ativo protegido dela.
+
+**O que foi adotado no lugar:** as *convenções* de catálogo de streaming, que são vocabulário de categoria e não propriedade de ninguém — fileiras por categoria, grade de capas, página de detalhe ao clicar.
+
+## 17. Claude for Chrome indisponível
+
+A skill aparece listada, mas as ferramentas `mcp__claude-in-chrome__*` não existem nesta sessão. Não houve análise do site da Netflix por navegação automatizada.
+
+## 18. Telas de detalhe para Filme, Diretor e Gênero
+
+As três entidades do lado "1" de alguma relação ganham página própria.
+
+**Por quê:** cada página vira prova visual de um 1:N — o filme mostra suas avaliações, o diretor mostra seus filmes, o gênero mostra os dele. O código é quase idêntico nas três, então a simetria custa pouco e evita a impressão de trabalho pela metade.
+
+**Descartado:** detalhe só para filme — clicar no nome do diretor cairia em beco sem saída.
+
+## 19. Clicar abre o detalhe
+
+Antes, clicar num filme levava ao formulário de edição. Agora abre a página dele; **editar e excluir viram ações** dentro da página e da listagem.
+
+**Por quê:** é o que o avaliador espera ao explorar sozinho. Clicar num card de catálogo e cair num formulário surpreende.
+
+## 20. A malha sai do fundo e permanece nas letras
+
+O fundo volta a ser chão limpo. A malha continua **recortada dentro** dos títulos e numerais, que é a assinatura do mundo.
+
+**Por quê:** o usuário achou o fundo pixelado demais. Remover a malha por completo abandonaria o Cátodo Velado e sobraria escuro com laranja, sem direção — exatamente o padrão que o piso de qualidade manda evitar.
+
+## 21. Pôsteres tipográficos autorais
+
+Cada filme ganha uma capa desenhada em SVG/CSS: o título na fonte condensada sobre campo de cor derivado do gênero, com a malha.
+
+**Por quê:** não há geração de imagem nesta máquina, e usar os pôsteres reais desses filmes repetiria o problema de propriedade. As capas autorais não dependem de nada externo, combinam com o mundo e funcionam offline.
+
+**Descartado:** fotos de banco gratuito — exigem internet na demonstração, e uma foto genérica colada num filme real confunde.
+
+## 22. Listagem de filmes vira grade de capas
+
+**Por quê:** é a convenção de streaming que o usuário pediu, e dá às capas a escala necessária para serem lidas.
+
+## 23. Avaliação não fica embutida na página do filme
+
+A página lista as avaliações e leva ao formulário por link.
+
+**Por quê:** decisão do usuário. O formulário embutido tornaria a demonstração mais fluida (avaliar e ver a média mudar na hora), mas foi recusado em favor de menos código.

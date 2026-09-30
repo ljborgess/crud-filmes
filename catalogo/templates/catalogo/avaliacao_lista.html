@@ -14,7 +14,7 @@
     {% for avaliacao in avaliacoes %}
     <article class="registro">
         <span class="indice">{{ forloop.counter|stringformat:"02d" }}</span>
-        <h2>{{ avaliacao.filme.titulo }}</h2>
+        <h2><a href="{% url 'detalhe_filme' avaliacao.filme.pk %}">{{ avaliacao.filme.titulo }}</a></h2>
         <div style="margin-bottom:12px;">
             {% include 'catalogo/_estrelas.html' with avaliacao=avaliacao %}
         </div>
