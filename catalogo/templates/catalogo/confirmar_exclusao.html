@@ -1,0 +1,45 @@
+{% extends 'catalogo/base.html' %}
+
+{% block titulo %}Confirmar exclusão · Catálogo de Filmes{% endblock %}
+{% block largura %}estreito{% endblock %}
+
+{% block conteudo %}
+{% if bloqueio %}
+    <div class="cabeca">
+        <h1>Recusado</h1>
+    </div>
+
+    <div class="recusado">
+        <span class="rotulo">Exclusão bloqueada</span>
+        {{ bloqueio }}
+    </div>
+
+    <div class="alvo">{{ objeto }}</div>
+    {% if detalhe %}<p class="meta" style="color:var(--osso-fraco);">{{ detalhe }}</p>{% endif %}
+
+    <div class="acoes" style="margin-top:34px;">
+        <a href="{% url voltar_para %}" class="acao acao-forte">Voltar</a>
+    </div>
+{% else %}
+    <div class="cabeca">
+        <h1>Excluir</h1>
+    </div>
+
+    <span class="rotulo">Este {{ tipo }} sairá do catálogo</span>
+    <div class="alvo condenado">{{ objeto }}</div>
+    {% if detalhe %}<p class="meta" style="color:var(--osso-fraco);">{{ detalhe }}</p>{% endif %}
+
+    <div class="recusado" style="margin-top:28px;">
+        <span class="rotulo">Sem retorno</span>
+        Esta ação não pode ser desfeita.{% if aviso %} {{ aviso }}{% endif %}
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="acoes" style="margin-top:14px;">
+            <button type="submit" class="acao acao-recusa">Excluir definitivamente</button>
+            <a href="{% url voltar_para %}" class="acao">Cancelar</a>
+        </div>
+    </form>
+{% endif %}
+{% endblock %}

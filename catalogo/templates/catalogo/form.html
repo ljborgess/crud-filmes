@@ -1,0 +1,35 @@
+{% extends 'catalogo/base.html' %}
+
+{% block titulo %}{{ titulo_pagina }} · Catálogo de Filmes{% endblock %}
+{% block largura %}estreito{% endblock %}
+
+{% block conteudo %}
+<div class="cabeca">
+    <h1>{{ titulo_pagina }}</h1>
+</div>
+
+<form method="post" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+    <div class="recusado">
+        <span class="rotulo">Recusado</span>
+        {% for erro in form.non_field_errors %}{{ erro }}{% endfor %}
+    </div>
+    {% endif %}
+
+    {% for campo in form %}
+    <div class="campo {% if campo.errors %}com-erro{% endif %}">
+        <label for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+        {{ campo }}
+        {% if campo.help_text %}<div class="ajuda">{{ campo.help_text }}</div>{% endif %}
+        {% for erro in campo.errors %}<div class="erro">{{ erro }}</div>{% endfor %}
+    </div>
+    {% endfor %}
+
+    <div class="acoes" style="margin-top:38px;">
+        <button type="submit" class="acao acao-forte">Salvar</button>
+        <a href="{% url voltar_para %}" class="acao">Voltar</a>
+    </div>
+</form>
+{% endblock %}

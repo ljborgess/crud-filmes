@@ -1,0 +1,1214 @@
+/* ==========================================================================
+   Catálogo de Filmes — mundo "Cátodo Velado"
+   Duas cores sobre malha de bronze. Sem caixa, régua ou divisória.
+   Movimento: o valor golpeia; o anterior decai. Nunca interpola.
+   ========================================================================== */
+
+:root {
+    /* Os quatro papéis do mundo */
+    --fundo: #070a12;
+    --fundo-fundo: #04060c;
+    --malha: rgba(200, 160, 106, 0.3);
+    --fantasma: rgba(226, 214, 196, 0.42);
+    --fantasma-fraco: rgba(226, 214, 196, 0.3);
+    --golpe: #ff7a1c;
+    --golpe-claro: #ffa257;
+    --osso: #efe7da;
+    --osso-fraco: rgba(239, 231, 218, 0.62);
+    --recusa: rgba(239, 231, 218, 0.22);
+
+    /* Um relógio só: toda animação da página deriva deste compasso */
+    --beat: 220ms;
+    --saida: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* { box-sizing: border-box; }
+
+/* nenhum link herda o azul padrao do navegador */
+a { color: inherit; text-decoration: none; }
+
+html { scroll-behavior: smooth; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--fundo);
+    color: var(--osso);
+    font-family: 'Barlow', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* --- a malha corre além de toda borda ----------------------------------- */
+
+.gauze {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    /* chao limpo: so a luz do catodo, sem trama */
+    background-image:
+        radial-gradient(ellipse 70% 50% at 72% 14%, rgba(255, 122, 28, 0.13), transparent 68%),
+        radial-gradient(ellipse 55% 45% at 8% 88%, rgba(200, 160, 106, 0.06), transparent 70%);
+}
+
+
+
+/* --- tipografia --------------------------------------------------------- */
+
+.display,
+h1, h2, h3,
+.numeral,
+.marca-golpe,
+.marca-fantasma {
+    font-family: 'Saira Condensed', 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 0.92;
+    text-transform: uppercase;
+}
+
+.rotulo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--osso-fraco);
+}
+
+p { max-width: 68ch; }
+
+/* --- topo --------------------------------------------------------------- */
+
+.topo {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px 40px;
+    padding: 34px clamp(20px, 5vw, 72px) 26px;
+}
+
+.marca {
+    text-decoration: none;
+    font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+    display: flex;
+    gap: 0.4em;
+    align-items: baseline;
+}
+
+.marca-golpe {
+    color: var(--golpe);
+    text-shadow: 0 0 18px rgba(255, 122, 28, 0.55);
+}
+
+.marca-fantasma { color: var(--fantasma); }
+
+.secoes {
+    display: flex;
+    gap: clamp(18px, 3vw, 38px);
+    flex-wrap: wrap;
+}
+
+.secoes a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: rgba(226, 214, 196, 0.72);
+    padding-bottom: 3px;
+    transition: color var(--beat) var(--saida), text-shadow var(--beat) var(--saida);
+}
+
+.secoes a:hover { color: var(--osso); }
+
+/* o item em vigor é golpeado à frente; os demais ficam apagados atrás */
+.secoes a.golpe {
+    color: var(--golpe);
+    text-shadow: 0 0 16px rgba(255, 122, 28, 0.6);
+}
+
+/* --- layout ------------------------------------------------------------- */
+
+main {
+    position: relative;
+    z-index: 1;
+    padding: clamp(28px, 5vw, 60px) clamp(20px, 5vw, 72px) 120px;
+}
+
+main > * { max-width: 100%; }
+
+main.estreito {
+    max-width: 660px;
+    margin: 0 auto;
+}
+
+.cabeca {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: clamp(32px, 5vw, 56px);
+}
+
+.cabeca h1 {
+    margin: 0;
+    font-size: clamp(2rem, 6.4vw, 5.4rem);
+    line-height: 1.02;
+    padding-top: 0.06em;
+    color: var(--osso);
+}
+
+h2.faixa-titulo {
+    margin: clamp(48px, 6vw, 76px) 0 20px;
+    font-size: clamp(1.1rem, 1.7vw, 1.35rem);
+    color: var(--osso-fraco);
+    letter-spacing: 0.14em;
+}
+
+/* --- numerais golpeados, com as irmãs apagadas atrás -------------------- */
+
+.medidas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(30px, 6vw, 92px);
+    margin-bottom: clamp(20px, 4vw, 40px);
+}
+
+.medida {
+    position: relative;
+    text-decoration: none;
+    display: block;
+    padding-top: 26px;
+    min-width: 108px;
+}
+
+.medida .numeral {
+    position: relative;
+    display: block;
+    font-size: clamp(3.6rem, 8vw, 6.4rem);
+    line-height: 1.04;
+    color: var(--golpe);
+    filter: drop-shadow(0 0 16px rgba(255, 122, 28, 0.55));
+    transition: filter var(--beat) var(--saida);
+    animation: golpear calc(var(--beat) * 2) var(--saida) backwards;
+    animation-delay: var(--atraso, 0ms);
+}
+
+.medida .rotulo { margin-top: 10px; display: block; }
+
+.medida:hover .numeral {
+    filter: drop-shadow(0 0 30px rgba(255, 122, 28, 0.95));
+}
+
+
+@keyframes golpear {
+    0%   { opacity: 0; filter: blur(6px); }
+    55%  { opacity: 1; filter: blur(0); }
+    100% { opacity: 1; filter: blur(0); }
+}
+
+/* --- destaque: o filme de maior média ----------------------------------- */
+
+.destaque {
+    position: relative;
+    padding: clamp(24px, 4vw, 46px) 0 clamp(20px, 3vw, 34px);
+}
+
+.destaque .titulo {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: clamp(1.9rem, 8.4vw, 8.5rem);
+    /* recorte na malha corta til e acento: a linha precisa de folga no topo */
+    line-height: 1.02;
+    padding-top: 0.06em;
+    letter-spacing: -0.035em;
+    margin: 12px 0 14px;
+    text-wrap: balance;
+    max-width: calc(100vw - 2.6rem);
+    color: var(--osso);
+}
+
+.destaque .meta {
+    color: var(--osso-fraco);
+    font-size: 0.98rem;
+    /* amarrado a viewport, nao ao pai: garante a quebra mesmo se um
+       ancestral exceder a largura util */
+    max-width: min(68ch, calc(100vw - 2.6rem));
+}
+
+.destaque .meta .sep {
+    color: var(--recusa);
+    margin: 0 0.45em;
+}
+
+.destaque .meta strong {
+    color: var(--golpe);
+    font-weight: 600;
+}
+
+/* --- faixas em rolagem horizontal --------------------------------------- */
+
+.faixa {
+    display: flex;
+    gap: clamp(26px, 3.4vw, 54px);
+    overflow-x: auto;
+    padding-bottom: 20px;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+    scrollbar-color: var(--golpe) transparent;
+    /* a faixa continua além da borda: o último item desvanece em vez de ser cortado */
+    mask-image: linear-gradient(to right, #000 0, #000 88%, transparent 100%);
+}
+
+.faixa::-webkit-scrollbar { height: 3px; }
+.faixa::-webkit-scrollbar-track { background: var(--fantasma-fraco); }
+.faixa::-webkit-scrollbar-thumb { background: var(--golpe); }
+
+.item {
+    flex: 0 0 auto;
+    width: clamp(210px, 22vw, 268px);
+    scroll-snap-align: start;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    padding-top: 16px;
+    transition: transform var(--beat) var(--saida);
+}
+
+.item .ordem {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 2.5rem;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--fantasma);
+    display: block;
+    transition: color var(--beat) var(--saida), -webkit-text-stroke-color var(--beat) var(--saida);
+}
+
+.item .nome {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 1.35rem;
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+    margin: 12px 0 8px;
+    color: var(--osso);
+    transition: color var(--beat) var(--saida), text-shadow var(--beat) var(--saida);
+}
+
+.item .sub {
+    font-size: 0.87rem;
+    color: var(--osso-fraco);
+    line-height: 1.5;
+}
+
+.item:hover { transform: translateY(-4px); }
+.item:hover .ordem { color: var(--golpe); -webkit-text-stroke-color: var(--golpe); }
+.item:hover .nome { color: var(--golpe); text-shadow: 0 0 22px rgba(255, 122, 28, 0.5); }
+
+/* --- registros: a listagem de cada entidade ----------------------------- */
+
+.registros {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr));
+    gap: clamp(30px, 4vw, 58px) clamp(28px, 4vw, 56px);
+}
+
+.registro { padding-top: 20px; }
+
+.registro .indice {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1.5rem;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--fantasma);
+    display: block;
+    margin-bottom: 10px;
+}
+
+.registro h2 {
+    margin: 0 0 10px;
+    font-size: clamp(1.5rem, 2.4vw, 2.05rem);
+    color: var(--osso);
+    transition: color var(--beat) var(--saida), text-shadow var(--beat) var(--saida);
+}
+
+.registro:hover h2 {
+    color: var(--golpe);
+    text-shadow: 0 0 24px rgba(255, 122, 28, 0.45);
+}
+
+.registro .atributo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--golpe-claro);
+    margin-right: 16px;
+}
+
+.registro .corpo {
+    color: var(--osso-fraco);
+    font-size: 0.93rem;
+    margin: 12px 0 16px;
+    min-height: 3em;
+}
+
+.registro .medida-linha {
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    color: var(--osso-fraco);
+    margin-bottom: 18px;
+}
+
+.registro .medida-linha strong { color: var(--golpe); font-weight: 600; }
+
+/* --- estrelas: as acesas golpeiam, as apagadas ficam fantasma ----------- */
+
+.estrelas {
+    display: inline-flex;
+    gap: 4px;
+    vertical-align: middle;
+}
+
+.estrelas svg { width: 15px; height: 15px; display: block; }
+.estrelas .cheia { fill: var(--golpe); stroke: none; filter: drop-shadow(0 0 5px rgba(255, 122, 28, 0.65)); }
+.estrelas .vazia { fill: none; stroke: var(--recusa); stroke-width: 2; }
+
+/* --- ações: sem caixa; o texto é o controle ----------------------------- */
+
+.acoes {
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.acao {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    font-size: 0.86rem;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--osso-fraco);
+    background: none;
+    border: 0;
+    padding: 6px 0;
+    cursor: pointer;
+    position: relative;
+    transition: color var(--beat) var(--saida), text-shadow var(--beat) var(--saida);
+}
+
+/* o sublinhado acende do nada, no mesmo compasso */
+.acao::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    width: 100%;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--beat) var(--saida);
+}
+
+.acao:hover,
+.acao:focus-visible { color: var(--golpe); text-shadow: 0 0 16px rgba(255, 122, 28, 0.55); }
+.acao:hover::after,
+.acao:focus-visible::after { transform: scaleX(1); }
+
+.acao-forte {
+    color: var(--golpe);
+    font-size: 0.95rem;
+    text-shadow: 0 0 18px rgba(255, 122, 28, 0.5);
+}
+
+.acao-forte::after { transform: scaleX(1); opacity: 0.45; }
+.acao-forte:hover::after { opacity: 1; }
+
+.acao-recusa { color: rgba(239, 231, 218, 0.55); }
+.acao-recusa:hover, .acao-recusa:focus-visible { color: #ff5a3c; text-shadow: 0 0 16px rgba(255, 90, 60, 0.5); }
+
+/* --- formulário: campos sem caixa, só a base acesa ---------------------- */
+
+.campo { margin-bottom: 30px; }
+
+.campo label {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--osso-fraco);
+    margin-bottom: 8px;
+}
+
+.campo input,
+.campo textarea,
+.campo select {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--fantasma);
+    border-radius: 0;
+    padding: 10px 0;
+    font-family: 'Barlow', sans-serif;
+    font-size: 1.06rem;
+    color: var(--osso);
+    transition: border-color var(--beat) var(--saida), box-shadow var(--beat) var(--saida);
+}
+
+.campo textarea { resize: vertical; min-height: 84px; }
+
+.campo select {
+    appearance: none;
+    cursor: pointer;
+    background-image: linear-gradient(45deg, transparent 50%, var(--golpe) 50%),
+                      linear-gradient(135deg, var(--golpe) 50%, transparent 50%);
+    background-position: right 10px center, right 4px center;
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+    padding-right: 26px;
+}
+
+.campo select option { background: var(--fundo-fundo); color: var(--osso); }
+
+.campo input::placeholder,
+.campo textarea::placeholder { color: var(--recusa); }
+
+/* o campo em foco é o golpeado */
+.campo input:focus,
+.campo textarea:focus,
+.campo select:focus {
+    outline: none;
+    border-bottom-color: var(--golpe);
+    box-shadow: 0 1px 18px -6px rgba(255, 122, 28, 0.8);
+}
+
+.campo .ajuda {
+    font-size: 0.8rem;
+    color: var(--osso-fraco);
+    margin-top: 7px;
+}
+
+.campo .erro {
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 0.76rem;
+    color: #ff5a3c;
+    margin-top: 7px;
+}
+
+.campo.com-erro input,
+.campo.com-erro textarea,
+.campo.com-erro select { border-bottom-color: #ff5a3c; }
+
+/* --- recusa: o bloqueio do PROTECT fica escuro, não vermelho de erro ---- */
+
+.recusado {
+    padding: 22px 0 22px 20px;
+    margin-bottom: 28px;
+    position: relative;
+    color: var(--osso-fraco);
+    font-size: 0.95rem;
+    max-width: 60ch;
+}
+
+.recusado::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--golpe), transparent);
+}
+
+.recusado .rotulo { display: block; margin-bottom: 8px; color: var(--golpe); }
+
+.alvo {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: clamp(1.7rem, 4.6vw, 3.4rem);
+    line-height: 1.06;
+    padding-top: 0.06em;
+    margin: 6px 0 10px;
+    color: var(--osso);
+}
+
+/* o registro condenado já decai antes de sumir: sobra só o contorno */
+.alvo.condenado {
+    background: none;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(255, 90, 60, 0.55);
+}
+
+/* --- vazio -------------------------------------------------------------- */
+
+.vazio {
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-size: 0.86rem;
+    color: var(--recusa);
+    padding: 54px 0;
+}
+
+/* --- superfícies do navegador ------------------------------------------- */
+
+::selection { background: var(--golpe); color: var(--fundo); }
+
+:focus-visible {
+    outline: 1px solid var(--golpe);
+    outline-offset: 4px;
+}
+
+html { scrollbar-color: var(--golpe) var(--fundo-fundo); scrollbar-width: thin; }
+body::-webkit-scrollbar { width: 9px; }
+body::-webkit-scrollbar-track { background: var(--fundo-fundo); }
+body::-webkit-scrollbar-thumb { background: var(--golpe); }
+
+input, textarea, select { caret-color: var(--golpe); }
+
+.numeral, .medida-linha strong, .item .ordem { font-variant-numeric: tabular-nums; }
+
+/* --- adaptação ---------------------------------------------------------- */
+
+@media (max-width: 720px) {
+    .topo { padding-top: 24px; }
+    .secoes { gap: 16px; }
+    .secoes a { font-size: 0.85rem; letter-spacing: 0.13em; }
+
+    /* em duas colunas as quatro contagens cabem sem estourar a largura */
+    .medidas {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 28px 20px;
+    }
+    .medida { min-width: 0; padding-top: 18px; }
+    .medida .fantasmas { top: 18px; }
+
+    /* o título e as ações empilham em vez de disputar a mesma linha */
+    .cabeca {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+    }
+    .acoes { gap: 18px; }
+    .item { width: clamp(180px, 62vw, 230px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 1ms !important;
+    }
+}
+
+/* --- capa autoral do filme ---------------------------------------------- */
+
+.capa {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    background: var(--fundo-fundo);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 12% 10% 11%;
+    transition: transform var(--beat) var(--saida);
+}
+
+/* o campo de cor: uma diagonal do gênero cortando o terço superior */
+.capa-campo {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(var(--inclinacao, 197deg),
+            hsl(var(--matiz) 92% 54%) 0%,
+            hsl(var(--matiz) 86% 38%) 38%,
+            transparent 62%);
+}
+
+/* a mesma trama das letras, agora sobre o campo */
+.capa-malha {
+    position: absolute;
+    inset: 0;
+    background-image:
+        repeating-linear-gradient(0deg, rgba(4, 6, 12, 0.5) 0 1px, transparent 1px 4px),
+        repeating-linear-gradient(90deg, rgba(4, 6, 12, 0.32) 0 1px, transparent 1px 4px);
+}
+
+.capa-genero,
+.capa-titulo,
+.capa-diretor { position: relative; }
+
+.capa-genero {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    font-size: clamp(0.56rem, 1vw, 0.72rem);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--osso);
+    opacity: 0.75;
+    margin-bottom: 0.7em;
+}
+
+.capa-titulo {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: clamp(1.05rem, 2.1vw, 1.75rem);
+    line-height: 0.96;
+    letter-spacing: -0.02em;
+    color: var(--osso);
+    text-wrap: balance;
+}
+
+.capa-diretor {
+    font-family: 'Barlow', sans-serif;
+    font-size: clamp(0.62rem, 0.95vw, 0.78rem);
+    color: var(--osso-fraco);
+    margin-top: 0.55em;
+}
+
+/* --- grade de capas ------------------------------------------------------ */
+
+.grade {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 190px), 1fr));
+    gap: clamp(22px, 2.6vw, 38px);
+}
+
+.cartaz { text-decoration: none; display: block; }
+
+.cartaz .abaixo {
+    margin-top: 12px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.cartaz .abaixo .nome {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+    color: var(--osso);
+    transition: color var(--beat) var(--saida);
+}
+
+.cartaz .abaixo .nota {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    color: var(--golpe);
+    white-space: nowrap;
+}
+
+.cartaz:hover .capa { transform: translateY(-6px); }
+.cartaz:hover .abaixo .nome { color: var(--golpe); }
+
+/* --- página de detalhe --------------------------------------------------- */
+
+.detalhe-topo {
+    display: grid;
+    grid-template-columns: minmax(0, 240px) minmax(0, 1fr);
+    gap: clamp(28px, 4vw, 60px);
+    align-items: start;
+    margin-bottom: clamp(36px, 5vw, 64px);
+}
+
+.detalhe-topo .titulo {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: clamp(2rem, 6vw, 4.6rem);
+    line-height: 1.02;
+    padding-top: 0.06em;
+    letter-spacing: -0.03em;
+    margin: 0 0 14px;
+    max-width: calc(100vw - 2.6rem);
+    color: var(--osso);
+}
+
+.detalhe-topo .sinopse {
+    color: var(--osso-fraco);
+    font-size: 1.02rem;
+    margin: 18px 0 24px;
+}
+
+.vinculos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 26px;
+    margin-bottom: 20px;
+}
+
+.vinculo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    font-size: 0.82rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--golpe-claro);
+    text-decoration: none;
+    transition: color var(--beat) var(--saida);
+}
+
+.vinculo:hover { color: var(--golpe); }
+.vinculo span { color: var(--osso-fraco); margin-right: 0.5em; }
+
+.media-grande {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1;
+    color: var(--golpe);
+    filter: drop-shadow(0 0 16px rgba(255, 122, 28, 0.5));
+}
+
+/* lista de avaliações dentro do detalhe */
+.avaliacao-linha { padding: 20px 0; max-width: 72ch; }
+
+.avaliacao-linha .cabecalho {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 7px;
+}
+
+.avaliacao-linha .autor {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 1.05rem;
+    color: var(--osso);
+}
+
+.avaliacao-linha .quando {
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-size: 0.74rem;
+    color: var(--recusa);
+}
+
+.avaliacao-linha .texto { color: var(--osso-fraco); font-size: 0.95rem; margin: 0; }
+
+@media (max-width: 720px) {
+    .detalhe-topo {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 24px;
+    }
+    .detalhe-topo .capa-lugar { max-width: 200px; }
+    .grade { grid-template-columns: repeat(auto-fill, minmax(min(100%, 140px), 1fr)); }
+}
+
+/* ==========================================================================
+   Movimento
+   Momento focal: a capa se transforma da grade para o herói do detalhe.
+   O resto é feedback curto — em modo Operate, transição rotineira é rápida.
+   ========================================================================== */
+
+/* --- continuidade entre páginas ----------------------------------------- */
+
+@view-transition { navigation: auto; }
+
+/* a página cede lugar depressa; a capa é que carrega a continuidade */
+::view-transition-old(root) {
+    animation: sair-pagina 90ms var(--saida) both;
+}
+
+::view-transition-new(root) {
+    animation: entrar-pagina 200ms var(--saida) both;
+}
+
+@keyframes sair-pagina {
+    to { opacity: 0; }
+}
+
+@keyframes entrar-pagina {
+    from { opacity: 0; }
+}
+
+/* a capa não some nem reaparece: ela viaja e muda de forma */
+::view-transition-group(*) {
+    animation-duration: 420ms;
+    animation-timing-function: var(--saida);
+}
+
+/* --- entrada da grade ---------------------------------------------------- */
+/* lista aparecendo como lista: escalonamento com teto de atraso */
+
+.grade .cartaz {
+    animation: erguer 420ms var(--saida) backwards;
+    animation-delay: min(calc(var(--ordem, 0) * 55ms), 330ms);
+}
+
+@keyframes erguer {
+    from { opacity: 0; transform: translateY(14px); }
+}
+
+/* --- hover da capa ------------------------------------------------------- */
+
+.capa-campo { transition: filter var(--beat) var(--saida); }
+.capa-malha { transition: opacity var(--beat) var(--saida); }
+
+/* o campo acende e a trama recua: o cátodo é golpeado */
+.cartaz:hover .capa-campo,
+.item:hover .capa-campo { filter: brightness(1.22) saturate(1.1); }
+.cartaz:hover .capa-malha,
+.item:hover .capa-malha { opacity: 0.55; }
+
+.cartaz:focus-visible .capa { transform: translateY(-6px); }
+
+/* --- estrelas: acendem em sequência ------------------------------------- */
+
+.avaliacao-linha .estrelas .cheia {
+    animation: acender 260ms var(--saida) backwards;
+}
+
+.avaliacao-linha .estrelas .cheia:nth-child(1) { animation-delay: 40ms; }
+.avaliacao-linha .estrelas .cheia:nth-child(2) { animation-delay: 90ms; }
+.avaliacao-linha .estrelas .cheia:nth-child(3) { animation-delay: 140ms; }
+.avaliacao-linha .estrelas .cheia:nth-child(4) { animation-delay: 190ms; }
+.avaliacao-linha .estrelas .cheia:nth-child(5) { animation-delay: 240ms; }
+
+@keyframes acender {
+    from { opacity: 0; filter: drop-shadow(0 0 0 rgba(255, 122, 28, 0)); }
+}
+
+/* --- a média do detalhe golpeia ----------------------------------------- */
+
+.media-grande {
+    animation: golpear calc(var(--beat) * 2) var(--saida) backwards;
+    animation-delay: 120ms;
+}
+
+/* --- quem prefere menos movimento não recebe nenhum --------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+}
+
+/* --- mosaico: a relação 1:N virando imagem ------------------------------ */
+
+.mosaico-link { display: block; margin-bottom: 16px; }
+
+.mosaico {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    height: 132px;
+}
+
+.mosaico-carta {
+    width: 88px;
+    flex: 0 0 auto;
+    margin-left: calc(var(--profundidade) * -46px);
+    z-index: calc(3 - var(--profundidade));
+    transform: translateY(calc(var(--profundidade) * 7px)) rotate(calc(var(--profundidade) * 2.2deg));
+    transition: transform 320ms var(--saida), margin-left 320ms var(--saida);
+}
+
+.mosaico-carta:first-child { margin-left: 0; }
+.mosaico-carta .capa { padding: 14% 12%; }
+.mosaico-carta .capa-genero,
+.mosaico-carta .capa-diretor { display: none; }
+.mosaico-carta .capa-titulo { font-size: 0.72rem; line-height: 0.98; }
+
+/* o leque se abre ao passar o mouse: os filmes se separam */
+.mosaico-link:hover .mosaico-carta { margin-left: -22px; transform: translateY(0) rotate(0deg); }
+.mosaico-link:hover .mosaico-carta:first-child { margin-left: 0; }
+
+.mosaico-vazio {
+    width: 88px;
+    aspect-ratio: 2 / 3;
+    border: 1px dashed var(--recusa);
+}
+
+.mosaico-resto {
+    align-self: center;
+    margin-left: 14px;
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1.15rem;
+    color: var(--golpe);
+}
+
+/* --- capa pequena na lista de avaliações -------------------------------- */
+
+.capa-pequena { display: block; width: 92px; margin-bottom: 14px; }
+.capa-pequena .capa { padding: 14% 12%; }
+.capa-pequena .capa-genero,
+.capa-pequena .capa-diretor { display: none; }
+.capa-pequena .capa-titulo { font-size: 0.72rem; line-height: 0.98; }
+.capa-pequena .capa { transition: transform var(--beat) var(--saida); }
+.capa-pequena:hover .capa { transform: translateY(-5px); }
+
+/* --- entrada: tudo chega, escalonado e curto ---------------------------- */
+
+.faixa .item,
+.registros .registro,
+.avaliacao-linha,
+.medidas .medida {
+    animation: erguer 420ms var(--saida) backwards;
+}
+
+.faixa .item:nth-child(1), .registros .registro:nth-child(1),
+.avaliacao-linha:nth-child(1), .medidas .medida:nth-child(1) { animation-delay: 40ms; }
+.faixa .item:nth-child(2), .registros .registro:nth-child(2),
+.avaliacao-linha:nth-child(2), .medidas .medida:nth-child(2) { animation-delay: 95ms; }
+.faixa .item:nth-child(3), .registros .registro:nth-child(3),
+.avaliacao-linha:nth-child(3), .medidas .medida:nth-child(3) { animation-delay: 150ms; }
+.faixa .item:nth-child(4), .registros .registro:nth-child(4),
+.avaliacao-linha:nth-child(4), .medidas .medida:nth-child(4) { animation-delay: 205ms; }
+.faixa .item:nth-child(n+5), .registros .registro:nth-child(n+5),
+.avaliacao-linha:nth-child(n+5) { animation-delay: 260ms; }
+
+/* o numeral já golpeia por conta própria; não some junto */
+.medidas .medida { animation-name: erguer; }
+
+/* ==========================================================================
+   Painel: herói do melhor avaliado + faixa de instrumentos
+   ========================================================================== */
+
+.heroi {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 210px) minmax(0, 1fr);
+    gap: clamp(28px, 4vw, 56px);
+    align-items: center;
+    padding: clamp(30px, 4vw, 52px) 0 clamp(34px, 4vw, 56px);
+    margin-bottom: clamp(18px, 3vw, 34px);
+    isolation: isolate;
+    overflow: hidden;
+}
+
+/* o campo de cor do gênero do filme, sangrando para fora da tela */
+.heroi-campo {
+    position: absolute;
+    z-index: -2;
+    top: -40%;
+    right: -30vw;
+    width: 92vw;
+    height: 190%;
+    background:
+        radial-gradient(ellipse 52% 48% at 62% 50%,
+            hsl(var(--matiz) 92% 52% / 0.4) 0%,
+            hsl(var(--matiz) 88% 40% / 0.16) 42%,
+            transparent 72%);
+    filter: blur(6px);
+    animation: respirar 9s ease-in-out infinite alternate;
+}
+
+@keyframes respirar {
+    to { transform: translate3d(-2.5%, 1.5%, 0) scale(1.06); }
+}
+
+/* uma varredura atravessa o herói uma vez, na chegada */
+.heroi-varredura {
+    position: absolute;
+    z-index: -1;
+    inset: 0 auto 0 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, hsl(var(--matiz) 95% 62% / 0.14), transparent);
+    animation: varrer 1500ms var(--saida) 260ms both;
+}
+
+@keyframes varrer {
+    from { transform: translateX(-120%); }
+    to   { transform: translateX(340%); }
+}
+
+.heroi-capa {
+    display: block;
+    animation: erguer 520ms var(--saida) 80ms backwards;
+}
+
+.heroi-capa .capa { transition: transform 320ms var(--saida); }
+.heroi-capa:hover .capa { transform: translateY(-7px) scale(1.015); }
+
+.heroi-texto > * { animation: erguer 520ms var(--saida) backwards; }
+.heroi-texto > :nth-child(1) { animation-delay: 140ms; }
+.heroi-texto > :nth-child(2) { animation-delay: 200ms; }
+.heroi-texto > :nth-child(3) { animation-delay: 260ms; }
+.heroi-texto > :nth-child(4) { animation-delay: 320ms; }
+.heroi-texto > :nth-child(5) { animation-delay: 380ms; }
+
+.heroi-titulo {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: clamp(2.1rem, 6.4vw, 5.4rem);
+    line-height: 1.02;
+    padding-top: 0.06em;
+    letter-spacing: -0.035em;
+    color: var(--osso);
+    margin: 10px 0 8px;
+    max-width: calc(100vw - 2.6rem);
+    text-wrap: balance;
+}
+
+.heroi-meta { color: var(--osso-fraco); font-size: 1rem; margin: 0 0 18px; }
+.heroi-meta .sep { color: var(--recusa); margin: 0 0.45em; }
+
+.heroi-nota {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 26px;
+}
+
+.heroi-media {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    line-height: 1;
+    color: var(--golpe);
+    filter: drop-shadow(0 0 20px rgba(255, 122, 28, 0.55));
+}
+
+/* --- instrumentos: a contagem sobe sozinha, em CSS puro ----------------- */
+
+@property --contagem {
+    syntax: '<integer>';
+    initial-value: 0;
+    inherits: false;
+}
+
+.instrumentos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: clamp(18px, 2.4vw, 34px);
+    margin-bottom: clamp(10px, 2vw, 22px);
+}
+
+.instrumento {
+    display: block;
+    text-decoration: none;
+    padding-top: 6px;
+    animation: erguer 460ms var(--saida) backwards;
+    animation-delay: var(--atraso, 0ms);
+}
+
+.instrumento-numero {
+    display: block;
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.6rem, 5.4vw, 4.2rem);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    color: var(--golpe);
+    font-variant-numeric: tabular-nums;
+    filter: drop-shadow(0 0 14px rgba(255, 122, 28, 0.45));
+    counter-reset: valor var(--contagem);
+    animation: contar 1100ms var(--saida) forwards;
+    animation-delay: var(--atraso, 0ms);
+}
+
+.instrumento-numero::after { content: counter(valor); }
+
+@keyframes contar {
+    from { --contagem: 0; }
+    to   { --contagem: var(--alvo); }
+}
+
+.instrumento .rotulo { display: block; margin-top: 6px; }
+
+/* o trilho preenche junto com a contagem */
+.instrumento-trilho {
+    display: block;
+    height: 1px;
+    margin-top: 14px;
+    background: var(--fantasma-fraco);
+    overflow: hidden;
+}
+
+.instrumento-trilho i {
+    display: block;
+    height: 100%;
+    width: 100%;
+    background: var(--golpe);
+    transform-origin: left;
+    animation: preencher 1100ms var(--saida) forwards;
+    animation-delay: var(--atraso, 0ms);
+    box-shadow: 0 0 10px rgba(255, 122, 28, 0.8);
+}
+
+@keyframes preencher {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+}
+
+.instrumento:hover .instrumento-numero { filter: drop-shadow(0 0 26px rgba(255, 122, 28, 0.9)); }
+
+@media (max-width: 720px) {
+    .heroi {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 22px;
+    }
+    .heroi-capa { max-width: 170px; }
+    .instrumentos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .heroi-campo, .heroi-varredura { animation: none; }
+    .instrumento-numero { animation: none; --contagem: var(--alvo); }
+}
+
+/* --- ajustes de semântica: as faixas e instrumentos viraram listas ------ */
+
+.instrumentos, .faixa { list-style: none; padding: 0; margin: 0; }
+.instrumentos > li { display: block; }
+.faixa > li { flex: 0 0 auto; list-style: none; }
+.faixa > li > .item { width: 100%; }
+
+.item .nome, .item .sub { display: block; }
+.item .autor { display: block; margin-top: 4px; }
+
+/* título que existe para leitor de tela, não para a tela */
+.oculto {
+    position: absolute;
+    width: 1px; height: 1px;
+    margin: -1px; padding: 0; border: 0;
+    clip-path: inset(50%);
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+/* o número é gerado por CSS; o rótulo repete o valor para quem não o vê */
+.instrumento .rotulo { font-size: 0.72rem; }
+
+.heroi-titulo a, .heroi-meta a { color: inherit; text-decoration: none; }
+.heroi-meta a { transition: color var(--beat) var(--saida); }
+.heroi-meta a:hover { color: var(--golpe-claro); }
+.heroi-titulo a:hover { color: var(--golpe); }
+.heroi-nota { margin: 0 0 26px; }

@@ -1,0 +1,33 @@
+{% extends 'catalogo/base.html' %}
+
+{% block titulo %}Gêneros · Catálogo de Filmes{% endblock %}
+
+{% block conteudo %}
+<div class="cabeca">
+    <h1>Gêneros</h1>
+    <div class="acoes">
+        <a href="{% url 'criar_genero' %}" class="acao acao-forte">Novo gênero</a>
+    </div>
+</div>
+
+<div class="registros">
+    {% for genero in generos %}
+    <article class="registro">
+        <a href="{% url 'detalhe_genero' genero.pk %}" class="mosaico-link">
+            {% include 'catalogo/_mosaico.html' with filmes=genero.filmes.all total=genero.total_filmes %}
+        </a>
+        <h2><a href="{% url 'detalhe_genero' genero.pk %}">{{ genero.nome }}</a></h2>
+        <div class="medida-linha" style="margin-top:14px;">
+            <strong>{{ genero.total_filmes }}</strong> filme{{ genero.total_filmes|pluralize }}
+        </div>
+        <div class="acoes">
+            <a href="{% url 'detalhe_genero' genero.pk %}" class="acao">Abrir</a>
+            <a href="{% url 'editar_genero' genero.pk %}" class="acao">Editar</a>
+            <a href="{% url 'excluir_genero' genero.pk %}" class="acao acao-recusa">Excluir</a>
+        </div>
+    </article>
+    {% empty %}
+    <p class="vazio">Nenhum gênero cadastrado</p>
+    {% endfor %}
+</div>
+{% endblock %}

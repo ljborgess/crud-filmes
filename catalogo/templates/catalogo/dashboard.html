@@ -1,0 +1,111 @@
+{% extends 'catalogo/base.html' %}
+
+{% block titulo %}Painel · Catálogo de Filmes{% endblock %}
+
+{% block conteudo %}
+{% if destaque %}
+<article class="heroi" style="--matiz: {{ destaque.genero.matiz }}; --inclinacao: {{ destaque.genero.inclinacao }}deg">
+    <span class="heroi-campo" aria-hidden="true"></span>
+    <span class="heroi-varredura" aria-hidden="true"></span>
+
+    <a href="{% url 'detalhe_filme' destaque.pk %}" class="heroi-capa" tabindex="-1" aria-hidden="true">
+        {% include 'catalogo/_capa.html' with filme=destaque vt=1 %}
+    </a>
+
+    <div class="heroi-texto">
+        <p class="rotulo">Maior média do catálogo</p>
+        <h1 class="heroi-titulo">
+            <a href="{% url 'detalhe_filme' destaque.pk %}">{{ destaque.titulo }}</a>
+        </h1>
+        <p class="heroi-meta">
+            <a href="{% url 'detalhe_genero' destaque.genero.pk %}">{{ destaque.genero }}</a>
+            <span class="sep" aria-hidden="true">·</span>
+            <a href="{% url 'detalhe_diretor' destaque.diretor.pk %}">{{ destaque.diretor }}</a>
+        </p>
+        <p class="heroi-nota">
+            <span class="heroi-media">{{ destaque.media|floatformat:1 }}</span>
+            <span class="rotulo">de 5</span>
+        </p>
+        <p class="acoes">
+            <a href="{% url 'detalhe_filme' destaque.pk %}" class="acao acao-forte">Abrir</a>
+            <a href="{% url 'criar_filme' %}" class="acao">Novo filme</a>
+        </p>
+    </div>
+</article>
+{% endif %}
+
+<section aria-labelledby="titulo-resumo">
+    <h2 id="titulo-resumo" class="oculto">Resumo do catálogo</h2>
+    <ul class="instrumentos">
+        <li style="--alvo: {{ total_filmes }}; --atraso: 120ms">
+            <a href="{% url 'lista_filmes' %}" class="instrumento">
+                <span class="instrumento-numero" aria-hidden="true"></span>
+                <span class="oculto">{{ total_filmes }}</span>
+                <span class="rotulo">Filmes</span>
+                <span class="instrumento-trilho" aria-hidden="true"><i></i></span>
+            </a>
+        </li>
+        <li style="--alvo: {{ total_diretores }}; --atraso: 210ms">
+            <a href="{% url 'lista_diretores' %}" class="instrumento">
+                <span class="instrumento-numero" aria-hidden="true"></span>
+                <span class="oculto">{{ total_diretores }}</span>
+                <span class="rotulo">Diretores</span>
+                <span class="instrumento-trilho" aria-hidden="true"><i></i></span>
+            </a>
+        </li>
+        <li style="--alvo: {{ total_generos }}; --atraso: 300ms">
+            <a href="{% url 'lista_generos' %}" class="instrumento">
+                <span class="instrumento-numero" aria-hidden="true"></span>
+                <span class="oculto">{{ total_generos }}</span>
+                <span class="rotulo">Gêneros</span>
+                <span class="instrumento-trilho" aria-hidden="true"><i></i></span>
+            </a>
+        </li>
+        <li style="--alvo: {{ total_avaliacoes }}; --atraso: 390ms">
+            <a href="{% url 'lista_avaliacoes' %}" class="instrumento">
+                <span class="instrumento-numero" aria-hidden="true"></span>
+                <span class="oculto">{{ total_avaliacoes }}</span>
+                <span class="rotulo">Avaliações</span>
+                <span class="instrumento-trilho" aria-hidden="true"><i></i></span>
+            </a>
+        </li>
+    </ul>
+</section>
+
+<section aria-labelledby="titulo-ultimos">
+    <h2 id="titulo-ultimos" class="faixa-titulo">Últimos filmes cadastrados</h2>
+    <ul class="faixa">
+        {% for filme in ultimos_filmes %}
+        <li>
+            <a href="{% url 'detalhe_filme' filme.pk %}" class="item">
+                {% include 'catalogo/_capa.html' with filme=filme vt=1 %}
+                <span class="nome">{{ filme.titulo }}</span>
+                <span class="sub">{{ filme.genero }} · {{ filme.diretor }}</span>
+            </a>
+        </li>
+        {% empty %}
+        <li><p class="vazio">Nenhum filme cadastrado</p></li>
+        {% endfor %}
+    </ul>
+</section>
+
+<section aria-labelledby="titulo-avaliacoes">
+    <h2 id="titulo-avaliacoes" class="faixa-titulo">Últimas avaliações</h2>
+    <ul class="faixa">
+        {% for avaliacao in ultimas_avaliacoes %}
+        <li>
+            <a href="{% url 'detalhe_filme' avaliacao.filme.pk %}" class="item">
+                <span class="ordem" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</span>
+                <span class="nome">{{ avaliacao.filme.titulo }}</span>
+                <span class="sub">
+                    {% include 'catalogo/_estrelas.html' with avaliacao=avaliacao %}
+                    <span class="autor">{{ avaliacao.autor }}</span>
+                </span>
+            </a>
+        </li>
+        {% empty %}
+        <li><p class="vazio">Nenhuma avaliação ainda</p></li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

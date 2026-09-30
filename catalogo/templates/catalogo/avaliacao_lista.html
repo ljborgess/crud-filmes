@@ -1,0 +1,38 @@
+{% extends 'catalogo/base.html' %}
+
+{% block titulo %}Avaliações · Catálogo de Filmes{% endblock %}
+
+{% block conteudo %}
+<div class="cabeca">
+    <h1>Avaliações</h1>
+    <div class="acoes">
+        <a href="{% url 'criar_avaliacao' %}" class="acao acao-forte">Nova avaliação</a>
+    </div>
+</div>
+
+<div class="registros">
+    {% for avaliacao in avaliacoes %}
+    <article class="registro">
+        <a href="{% url 'detalhe_filme' avaliacao.filme.pk %}" class="capa-pequena">
+            {% include 'catalogo/_capa.html' with filme=avaliacao.filme %}
+        </a>
+        <h2><a href="{% url 'detalhe_filme' avaliacao.filme.pk %}">{{ avaliacao.filme.titulo }}</a></h2>
+        <div style="margin-bottom:12px;">
+            {% include 'catalogo/_estrelas.html' with avaliacao=avaliacao %}
+        </div>
+        <p class="corpo">
+            {% if avaliacao.comentario %}{{ avaliacao.comentario }}{% else %}Sem comentário.{% endif %}
+        </p>
+        <div class="medida-linha">
+            {{ avaliacao.autor }} · {{ avaliacao.criado_em|date:"d/m/Y H:i" }}
+        </div>
+        <div class="acoes">
+            <a href="{% url 'editar_avaliacao' avaliacao.pk %}" class="acao">Editar</a>
+            <a href="{% url 'excluir_avaliacao' avaliacao.pk %}" class="acao acao-recusa">Excluir</a>
+        </div>
+    </article>
+    {% empty %}
+    <p class="vazio">Nenhuma avaliação cadastrada</p>
+    {% endfor %}
+</div>
+{% endblock %}
