@@ -1,0 +1,44 @@
+{% extends 'catalogo/base.html' %}
+
+{% block titulo %}Confirmar exclusão · Catálogo de Filmes{% endblock %}
+{% block largura %}estreito{% endblock %}
+
+{% block conteudo %}
+<h1>Confirmar exclusão</h1>
+
+<div class="cartao largo">
+    {% if bloqueio %}
+        <div class="aviso">{{ bloqueio }}</div>
+        <p class="nome-alvo">{{ objeto }}</p>
+        {% if detalhe %}<p class="texto">{{ detalhe }}</p>{% endif %}
+        <div class="acoes">
+            <a href="{% url voltar_para %}" class="btn btn-outline">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                Voltar
+            </a>
+        </div>
+    {% else %}
+        <p>Tem certeza que deseja excluir este {{ tipo }}?</p>
+        <p class="nome-alvo">{{ objeto }}</p>
+        {% if detalhe %}<p class="texto">{{ detalhe }}</p>{% endif %}
+
+        <div class="aviso">
+            Esta ação não pode ser desfeita.{% if aviso %} {{ aviso }}{% endif %}
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="acoes">
+                <button type="submit" class="btn btn-excluir">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                    Sim, excluir
+                </button>
+                <a href="{% url voltar_para %}" class="btn btn-outline">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'catalogo/base.html' %}
+
+{% block titulo %}{{ titulo_pagina }} · Catálogo de Filmes{% endblock %}
+{% block largura %}estreito{% endblock %}
+
+{% block conteudo %}
+<h1>{{ titulo_pagina }}</h1>
+
+<div class="cartao largo">
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="aviso">
+            {% for erro in form.non_field_errors %}{{ erro }}{% endfor %}
+        </div>
+        {% endif %}
+
+        {% for campo in form %}
+        <div class="campo {% if campo.errors %}com-erro{% endif %}">
+            <label for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+            {{ campo }}
+            {% if campo.help_text %}<div class="ajuda">{{ campo.help_text }}</div>{% endif %}
+            {% for erro in campo.errors %}<div class="erro">{{ erro }}</div>{% endfor %}
+        </div>
+        {% endfor %}
+
+        <div class="acoes">
+            <button type="submit" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Salvar
+            </button>
+            <a href="{% url voltar_para %}" class="btn btn-outline">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                Voltar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

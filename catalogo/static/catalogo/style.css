@@ -1,0 +1,383 @@
+:root {
+    --bg: #fcfcfc;
+    --text: #191a1a;
+    --text-muted: #6b7280;
+    --border: #e5e5e5;
+    --border-strong: #d4d4d4;
+    --surface: #ffffff;
+    --badge-bg: #f0f0f0;
+    --badge-text: #3f3f3f;
+    --red: #b42323;
+    --red-dark: #8f1c1c;
+    --star: #e0a500;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+}
+
+/* ----------------------------------------------------------- navegação */
+
+.navbar {
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 32px;
+}
+
+.navbar .interno {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    flex-wrap: wrap;
+    max-width: 1040px;
+    margin: 0 auto;
+}
+
+.navbar .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.05em;
+    letter-spacing: -0.01em;
+}
+
+.navbar .brand svg {
+    width: 22px;
+    height: 22px;
+    stroke: var(--text);
+    flex-shrink: 0;
+}
+
+.navbar nav {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.navbar nav a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9em;
+    font-weight: 500;
+    padding-bottom: 2px;
+    border-bottom: 2px solid transparent;
+}
+
+.navbar nav a:hover { color: var(--text); }
+.navbar nav a.ativo {
+    color: var(--text);
+    border-bottom-color: var(--text);
+}
+
+/* -------------------------------------------------------------- layout */
+
+main {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+}
+
+main.estreito { max-width: 480px; }
+
+.page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 2.1em;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+main.estreito h1 {
+    margin: 0 0 32px 0;
+    font-size: 1.9em;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-align: center;
+}
+
+h2.secao {
+    font-size: 1.05em;
+    font-weight: 600;
+    margin: 44px 0 18px;
+    letter-spacing: -0.01em;
+}
+
+/* -------------------------------------------------------------- botões */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    padding: 11px 20px;
+    font-family: inherit;
+    font-size: 0.9em;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.btn svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    flex-shrink: 0;
+}
+
+.btn-primary { background: var(--text); color: #fff; }
+.btn-primary:hover { background: #2e2f2f; }
+
+.btn-outline {
+    background: transparent;
+    border-color: var(--border-strong);
+    color: var(--text);
+}
+.btn-outline:hover { background: #f5f5f5; }
+
+.btn-excluir { background: var(--red); color: #fff; }
+.btn-excluir:hover { background: var(--red-dark); }
+
+/* --------------------------------------------------------------- cards */
+
+.cartoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.cartao {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 28px;
+    width: 280px;
+    transition: border-color 0.15s ease;
+}
+
+.cartao:hover { border-color: var(--border-strong); }
+.cartao.largo { width: 100%; }
+
+.cartao .avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--text);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.1em;
+    margin-bottom: 16px;
+}
+
+.cartao h2 {
+    margin: 0 0 8px 0;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+.cartao .texto {
+    color: var(--text-muted);
+    font-size: 0.9em;
+    line-height: 1.55em;
+    margin-bottom: 22px;
+    min-height: 2.2em;
+}
+
+.badge {
+    display: inline-block;
+    background: var(--badge-bg);
+    color: var(--badge-text);
+    font-size: 0.75em;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin: 0 6px 14px 0;
+}
+
+.cartao .acoes { display: flex; gap: 8px; }
+
+.cartao .acoes .btn {
+    flex: 1;
+    padding: 9px 0;
+    font-size: 0.82em;
+}
+
+/* ---------------------------------------------------------- dashboard */
+
+.metricas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 8px;
+}
+
+.metrica {
+    flex: 1 1 180px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 24px 26px;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.15s ease;
+}
+
+.metrica:hover { border-color: var(--border-strong); }
+
+.metrica .numero {
+    font-size: 2.4em;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+.metrica .rotulo {
+    color: var(--text-muted);
+    font-size: 0.85em;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+.colunas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.coluna { flex: 1 1 320px; }
+
+.linha {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.linha:last-child { border-bottom: none; }
+.linha .principal { font-weight: 500; font-size: 0.95em; }
+.linha .secundario { color: var(--text-muted); font-size: 0.82em; }
+
+.destaque {
+    background: var(--text);
+    color: #fff;
+    border-radius: 18px;
+    padding: 28px;
+}
+
+.destaque .rotulo {
+    font-size: 0.78em;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.6;
+}
+
+.destaque .titulo {
+    font-size: 1.5em;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 8px 0 6px;
+}
+
+.destaque .meta { opacity: 0.7; font-size: 0.88em; }
+
+/* -------------------------------------------------------------- estrelas */
+
+.estrelas { display: inline-flex; gap: 2px; vertical-align: middle; }
+.estrelas svg { width: 15px; height: 15px; }
+.estrelas .cheia { fill: var(--star); stroke: var(--star); }
+.estrelas .vazia { fill: none; stroke: var(--border-strong); }
+.estrelas.clara .vazia { stroke: rgba(255,255,255,0.35); }
+
+/* ----------------------------------------------------------- formulário */
+
+form label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: 500;
+    font-size: 0.88em;
+}
+
+form input, form textarea, form select {
+    width: 100%;
+    padding: 11px 14px;
+    margin-bottom: 4px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.95em;
+    color: var(--text);
+    background: var(--bg);
+    transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+form input:focus, form textarea:focus, form select:focus {
+    outline: none;
+    border-color: var(--text);
+    box-shadow: 0 0 0 3px rgba(25, 26, 26, 0.08);
+    background: #fff;
+}
+
+form textarea { resize: vertical; }
+form select { cursor: pointer; }
+
+.campo { margin-bottom: 18px; }
+.campo .ajuda { color: var(--text-muted); font-size: 0.8em; margin-top: 5px; }
+.campo .erro { color: var(--red); font-size: 0.82em; margin-top: 5px; }
+.campo.com-erro input,
+.campo.com-erro textarea,
+.campo.com-erro select { border-color: var(--red); }
+
+.acoes { display: flex; gap: 8px; }
+.acoes .btn { flex: 1; }
+
+/* --------------------------------------------------------------- avisos */
+
+.vazio {
+    text-align: center;
+    color: var(--text-muted);
+    width: 100%;
+    padding: 60px 0;
+    font-size: 0.95em;
+}
+
+.aviso {
+    background: #fdf3f3;
+    border: 1px solid #f3d6d6;
+    color: var(--red-dark);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 0.88em;
+    line-height: 1.5em;
+    margin-bottom: 20px;
+}
+
+.nome-alvo {
+    font-size: 1.15em;
+    font-weight: 600;
+    margin: 4px 0;
+}
