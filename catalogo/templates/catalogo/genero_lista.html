@@ -3,35 +3,28 @@
 {% block titulo %}Gêneros · Catálogo de Filmes{% endblock %}
 
 {% block conteudo %}
-<div class="page-header">
+<div class="cabeca">
     <h1>Gêneros</h1>
-    <a href="{% url 'criar_genero' %}" class="btn btn-primary">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Novo gênero
-    </a>
+    <div class="acoes">
+        <a href="{% url 'criar_genero' %}" class="acao acao-forte">Novo gênero</a>
+    </div>
 </div>
 
-<div class="cartoes">
+<div class="registros">
     {% for genero in generos %}
-    <div class="cartao">
-        <div class="avatar">{{ genero.nome|first|upper }}</div>
+    <article class="registro">
+        <span class="indice">{{ forloop.counter|stringformat:"02d" }}</span>
         <h2>{{ genero.nome }}</h2>
-        <p class="texto">
-            {{ genero.total_filmes }} filme{{ genero.total_filmes|pluralize }} neste gênero.
-        </p>
-        <div class="acoes">
-            <a href="{% url 'editar_genero' genero.pk %}" class="btn btn-primary">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
-                Editar
-            </a>
-            <a href="{% url 'excluir_genero' genero.pk %}" class="btn btn-excluir">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-                Excluir
-            </a>
+        <div class="medida-linha" style="margin-top:14px;">
+            <strong>{{ genero.total_filmes }}</strong> filme{{ genero.total_filmes|pluralize }} neste gênero
         </div>
-    </div>
+        <div class="acoes">
+            <a href="{% url 'editar_genero' genero.pk %}" class="acao">Editar</a>
+            <a href="{% url 'excluir_genero' genero.pk %}" class="acao acao-recusa">Excluir</a>
+        </div>
+    </article>
     {% empty %}
-    <p class="vazio">Nenhum gênero cadastrado ainda.</p>
+    <p class="vazio">Nenhum gênero cadastrado</p>
     {% endfor %}
 </div>
 {% endblock %}

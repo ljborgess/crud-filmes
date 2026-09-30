@@ -3,70 +3,74 @@
 {% block titulo %}Painel · Catálogo de Filmes{% endblock %}
 
 {% block conteudo %}
-<div class="page-header">
+<div class="cabeca">
     <h1>Painel</h1>
-    <a href="{% url 'criar_filme' %}" class="btn btn-primary">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Novo filme
-    </a>
+    <div class="acoes">
+        <a href="{% url 'criar_filme' %}" class="acao acao-forte">Novo filme</a>
+        <a href="{% url 'criar_avaliacao' %}" class="acao">Nova avaliação</a>
+    </div>
 </div>
 
-<div class="metricas">
-    <a href="{% url 'lista_filmes' %}" class="metrica">
-        <div class="numero">{{ total_filmes }}</div>
-        <div class="rotulo">Filmes</div>
+<div class="medidas">
+    <a href="{% url 'lista_filmes' %}" class="medida" style="--atraso:0ms">
+        <span class="fantasmas" aria-hidden="true"><span>8</span><span>3</span><span>6</span></span>
+        <span class="numeral">{{ total_filmes }}</span>
+        <span class="rotulo">Filmes</span>
     </a>
-    <a href="{% url 'lista_diretores' %}" class="metrica">
-        <div class="numero">{{ total_diretores }}</div>
-        <div class="rotulo">Diretores</div>
+    <a href="{% url 'lista_diretores' %}" class="medida" style="--atraso:110ms">
+        <span class="fantasmas" aria-hidden="true"><span>9</span><span>2</span><span>7</span></span>
+        <span class="numeral">{{ total_diretores }}</span>
+        <span class="rotulo">Diretores</span>
     </a>
-    <a href="{% url 'lista_generos' %}" class="metrica">
-        <div class="numero">{{ total_generos }}</div>
-        <div class="rotulo">Gêneros</div>
+    <a href="{% url 'lista_generos' %}" class="medida" style="--atraso:220ms">
+        <span class="fantasmas" aria-hidden="true"><span>5</span><span>8</span><span>0</span></span>
+        <span class="numeral">{{ total_generos }}</span>
+        <span class="rotulo">Gêneros</span>
     </a>
-    <a href="{% url 'lista_avaliacoes' %}" class="metrica">
-        <div class="numero">{{ total_avaliacoes }}</div>
-        <div class="rotulo">Avaliações</div>
+    <a href="{% url 'lista_avaliacoes' %}" class="medida" style="--atraso:330ms">
+        <span class="fantasmas" aria-hidden="true"><span>4</span><span>7</span><span>1</span></span>
+        <span class="numeral">{{ total_avaliacoes }}</span>
+        <span class="rotulo">Avaliações</span>
     </a>
 </div>
 
 {% if destaque %}
-<h2 class="secao">Melhor avaliado</h2>
 <div class="destaque">
-    <div class="rotulo">Maior média de notas</div>
+    <span class="rotulo">Maior média do catálogo</span>
     <div class="titulo">{{ destaque.titulo }}</div>
-    <div class="meta">
-        {{ destaque.genero }} · {{ destaque.diretor }} — média {{ destaque.media|floatformat:1 }} de 5
-    </div>
+    <p class="meta">
+        {{ destaque.genero }} <span class="sep">·</span> dirigido por {{ destaque.diretor }}
+        <span class="sep">·</span> média <strong>{{ destaque.media|floatformat:1 }}</strong> de 5
+    </p>
 </div>
 {% endif %}
 
-<div class="colunas">
-    <div class="coluna">
-        <h2 class="secao">Últimos filmes cadastrados</h2>
-        {% for filme in ultimos_filmes %}
-        <div class="linha">
-            <span class="principal">{{ filme.titulo }}</span>
-            <span class="secundario">{{ filme.genero }} · {{ filme.diretor }}</span>
-        </div>
-        {% empty %}
-        <p class="vazio">Nenhum filme cadastrado.</p>
-        {% endfor %}
-    </div>
+<h2 class="faixa-titulo">Últimos filmes cadastrados</h2>
+<div class="faixa">
+    {% for filme in ultimos_filmes %}
+    <a href="{% url 'editar_filme' filme.pk %}" class="item">
+        <span class="ordem">{{ forloop.counter|stringformat:"02d" }}</span>
+        <div class="nome">{{ filme.titulo }}</div>
+        <div class="sub">{{ filme.genero }} · {{ filme.diretor }}</div>
+    </a>
+    {% empty %}
+    <p class="vazio">Nenhum filme cadastrado</p>
+    {% endfor %}
+</div>
 
-    <div class="coluna">
-        <h2 class="secao">Últimas avaliações</h2>
-        {% for avaliacao in ultimas_avaliacoes %}
-        <div class="linha">
-            <span class="principal">
-                {% include 'catalogo/_estrelas.html' with avaliacao=avaliacao %}
-                {{ avaliacao.filme.titulo }}
-            </span>
-            <span class="secundario">{{ avaliacao.autor }}</span>
+<h2 class="faixa-titulo">Últimas avaliações</h2>
+<div class="faixa">
+    {% for avaliacao in ultimas_avaliacoes %}
+    <a href="{% url 'editar_avaliacao' avaliacao.pk %}" class="item">
+        <span class="ordem">{{ forloop.counter|stringformat:"02d" }}</span>
+        <div class="nome">{{ avaliacao.filme.titulo }}</div>
+        <div class="sub">
+            {% include 'catalogo/_estrelas.html' with avaliacao=avaliacao %}
+            <br>{{ avaliacao.autor }} · {{ avaliacao.criado_em|date:"d/m/Y" }}
         </div>
-        {% empty %}
-        <p class="vazio">Nenhuma avaliação ainda.</p>
-        {% endfor %}
-    </div>
+    </a>
+    {% empty %}
+    <p class="vazio">Nenhuma avaliação ainda</p>
+    {% endfor %}
 </div>
 {% endblock %}

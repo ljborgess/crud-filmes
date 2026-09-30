@@ -6,27 +6,36 @@
 <title>{% block titulo %}Catálogo de Filmes{% endblock %}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;700;900&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'catalogo/style.css' %}">
 </head>
 <body>
-    <header class="navbar">
-        <div class="interno">
-            <a href="{% url 'dashboard' %}" class="brand">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M7 3v18M17 3v18M2 8h5M2 16h5M17 8h5M17 16h5"/></svg>
-                <span>Catálogo de Filmes</span>
-            </a>
-            {% with rota=request.resolver_match.url_name %}
-            <nav>
-                <a href="{% url 'dashboard' %}" class="{% if rota == 'dashboard' %}ativo{% endif %}">Painel</a>
-                <a href="{% url 'lista_filmes' %}" class="{% if 'filme' in rota %}ativo{% endif %}">Filmes</a>
-                <a href="{% url 'lista_diretores' %}" class="{% if 'diretor' in rota %}ativo{% endif %}">Diretores</a>
-                <a href="{% url 'lista_generos' %}" class="{% if 'genero' in rota %}ativo{% endif %}">Gêneros</a>
-                <a href="{% url 'lista_avaliacoes' %}" class="{% if 'avalia' in rota %}ativo{% endif %}">Avaliações</a>
-            </nav>
-            {% endwith %}
-        </div>
+<!--
+THESIS: Todo valor possível já está na tela como fantasma apagado atrás da tela de bronze; o valor em vigor é golpeado à frente, aceso. Recusa a grade de cards em caixa que todo catálogo de filme entrega.
+OWN-WORLD: Duas cores sobre malha de bronze — preto azul-tinta de fundo, laranja de cátodo como única luz, osso para prosa. Sem caixa, régua ou divisória em lugar nenhum: o agrupamento vem de densidade de malha e profundidade. Saira Condensed golpeada contra Barlow em osso.
+STORY: O avaliador vê as quatro tabelas acesas de uma vez, entende que há muitos registros por entidade pelas camadas de fantasmas, e opera o CRUD sem procurar botão.
+FIRST VIEWPORT: O plano de malha corre além de toda borda. À esquerda, as quatro contagens como numerais golpeados com as dezenas fantasma empilhadas atrás em profundidade. À direita, o filme de maior média em letra condensada monumental. Abaixo, duas faixas de programação em rolagem horizontal. Ações primárias golpeadas em laranja, sempre na altura do numeral.
+FORM: Cátodo Velado (operate-b-struck-cathode-gauze), challenger competitivo adotado sobre o candidato 5 da lista própria; seed cf89399c. Topologia de fileiras doada pelo padrão de streaming, a pedido do usuário.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+-->
+    <div class="gauze" aria-hidden="true"></div>
+
+    <header class="topo">
+        <a href="{% url 'dashboard' %}" class="marca">
+            <span class="marca-golpe">Catálogo</span>
+            <span class="marca-fantasma">de Filmes</span>
+        </a>
+        {% with rota=request.resolver_match.url_name %}
+        <nav class="secoes">
+            <a href="{% url 'dashboard' %}" class="{% if rota == 'dashboard' %}golpe{% endif %}">Painel</a>
+            <a href="{% url 'lista_filmes' %}" class="{% if 'filme' in rota %}golpe{% endif %}">Filmes</a>
+            <a href="{% url 'lista_diretores' %}" class="{% if 'diretor' in rota %}golpe{% endif %}">Diretores</a>
+            <a href="{% url 'lista_generos' %}" class="{% if 'genero' in rota %}golpe{% endif %}">Gêneros</a>
+            <a href="{% url 'lista_avaliacoes' %}" class="{% if 'avalia' in rota %}golpe{% endif %}">Avaliações</a>
+        </nav>
+        {% endwith %}
     </header>
+
     <main class="{% block largura %}{% endblock %}">
         {% block conteudo %}{% endblock %}
     </main>
