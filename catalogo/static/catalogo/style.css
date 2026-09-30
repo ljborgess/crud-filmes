@@ -995,3 +995,191 @@ input, textarea, select { caret-color: var(--golpe); }
 
 /* o numeral já golpeia por conta própria; não some junto */
 .medidas .medida { animation-name: erguer; }
+
+/* ==========================================================================
+   Painel: herói do melhor avaliado + faixa de instrumentos
+   ========================================================================== */
+
+.heroi {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 210px) minmax(0, 1fr);
+    gap: clamp(28px, 4vw, 56px);
+    align-items: center;
+    padding: clamp(30px, 4vw, 52px) 0 clamp(34px, 4vw, 56px);
+    margin-bottom: clamp(18px, 3vw, 34px);
+    isolation: isolate;
+    overflow: hidden;
+}
+
+/* o campo de cor do gênero do filme, sangrando para fora da tela */
+.heroi-campo {
+    position: absolute;
+    z-index: -2;
+    top: -40%;
+    right: -30vw;
+    width: 92vw;
+    height: 190%;
+    background:
+        radial-gradient(ellipse 52% 48% at 62% 50%,
+            hsl(var(--matiz) 92% 52% / 0.4) 0%,
+            hsl(var(--matiz) 88% 40% / 0.16) 42%,
+            transparent 72%);
+    filter: blur(6px);
+    animation: respirar 9s ease-in-out infinite alternate;
+}
+
+@keyframes respirar {
+    to { transform: translate3d(-2.5%, 1.5%, 0) scale(1.06); }
+}
+
+/* uma varredura atravessa o herói uma vez, na chegada */
+.heroi-varredura {
+    position: absolute;
+    z-index: -1;
+    inset: 0 auto 0 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, hsl(var(--matiz) 95% 62% / 0.14), transparent);
+    animation: varrer 1500ms var(--saida) 260ms both;
+}
+
+@keyframes varrer {
+    from { transform: translateX(-120%); }
+    to   { transform: translateX(340%); }
+}
+
+.heroi-capa {
+    display: block;
+    animation: erguer 520ms var(--saida) 80ms backwards;
+}
+
+.heroi-capa .capa { transition: transform 320ms var(--saida); }
+.heroi-capa:hover .capa { transform: translateY(-7px) scale(1.015); }
+
+.heroi-texto > * { animation: erguer 520ms var(--saida) backwards; }
+.heroi-texto > :nth-child(1) { animation-delay: 140ms; }
+.heroi-texto > :nth-child(2) { animation-delay: 200ms; }
+.heroi-texto > :nth-child(3) { animation-delay: 260ms; }
+.heroi-texto > :nth-child(4) { animation-delay: 320ms; }
+.heroi-texto > :nth-child(5) { animation-delay: 380ms; }
+
+.heroi-titulo {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: clamp(2.1rem, 6.4vw, 5.4rem);
+    line-height: 1.02;
+    padding-top: 0.06em;
+    letter-spacing: -0.035em;
+    color: var(--osso);
+    margin: 10px 0 8px;
+    max-width: calc(100vw - 2.6rem);
+    text-wrap: balance;
+}
+
+.heroi-meta { color: var(--osso-fraco); font-size: 1rem; margin: 0 0 18px; }
+.heroi-meta .sep { color: var(--recusa); margin: 0 0.45em; }
+
+.heroi-nota {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 26px;
+}
+
+.heroi-media {
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    line-height: 1;
+    color: var(--golpe);
+    filter: drop-shadow(0 0 20px rgba(255, 122, 28, 0.55));
+}
+
+/* --- instrumentos: a contagem sobe sozinha, em CSS puro ----------------- */
+
+@property --contagem {
+    syntax: '<integer>';
+    initial-value: 0;
+    inherits: false;
+}
+
+.instrumentos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: clamp(18px, 2.4vw, 34px);
+    margin-bottom: clamp(10px, 2vw, 22px);
+}
+
+.instrumento {
+    display: block;
+    text-decoration: none;
+    padding-top: 6px;
+    animation: erguer 460ms var(--saida) backwards;
+    animation-delay: var(--atraso, 0ms);
+}
+
+.instrumento-numero {
+    display: block;
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.6rem, 5.4vw, 4.2rem);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    color: var(--golpe);
+    font-variant-numeric: tabular-nums;
+    filter: drop-shadow(0 0 14px rgba(255, 122, 28, 0.45));
+    counter-reset: valor var(--contagem);
+    animation: contar 1100ms var(--saida) forwards;
+    animation-delay: var(--atraso, 0ms);
+}
+
+.instrumento-numero::after { content: counter(valor); }
+
+@keyframes contar {
+    from { --contagem: 0; }
+    to   { --contagem: var(--alvo); }
+}
+
+.instrumento .rotulo { display: block; margin-top: 6px; }
+
+/* o trilho preenche junto com a contagem */
+.instrumento-trilho {
+    display: block;
+    height: 1px;
+    margin-top: 14px;
+    background: var(--fantasma-fraco);
+    overflow: hidden;
+}
+
+.instrumento-trilho i {
+    display: block;
+    height: 100%;
+    width: 100%;
+    background: var(--golpe);
+    transform-origin: left;
+    animation: preencher 1100ms var(--saida) forwards;
+    animation-delay: var(--atraso, 0ms);
+    box-shadow: 0 0 10px rgba(255, 122, 28, 0.8);
+}
+
+@keyframes preencher {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+}
+
+.instrumento:hover .instrumento-numero { filter: drop-shadow(0 0 26px rgba(255, 122, 28, 0.9)); }
+
+@media (max-width: 720px) {
+    .heroi {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 22px;
+    }
+    .heroi-capa { max-width: 170px; }
+    .instrumentos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .heroi-campo, .heroi-varredura { animation: none; }
+    .instrumento-numero { animation: none; --contagem: var(--alvo); }
+}

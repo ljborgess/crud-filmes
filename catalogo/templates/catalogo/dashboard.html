@@ -3,43 +3,53 @@
 {% block titulo %}Painel · Catálogo de Filmes{% endblock %}
 
 {% block conteudo %}
-<div class="cabeca">
-    <h1>Painel</h1>
-    <div class="acoes">
-        <a href="{% url 'criar_filme' %}" class="acao acao-forte">Novo filme</a>
-        <a href="{% url 'criar_avaliacao' %}" class="acao">Nova avaliação</a>
-    </div>
-</div>
-
-<div class="medidas">
-    <a href="{% url 'lista_filmes' %}" class="medida" style="--atraso:0ms">
-        <span class="numeral">{{ total_filmes }}</span>
-        <span class="rotulo">Filmes</span>
-    </a>
-    <a href="{% url 'lista_diretores' %}" class="medida" style="--atraso:110ms">
-        <span class="numeral">{{ total_diretores }}</span>
-        <span class="rotulo">Diretores</span>
-    </a>
-    <a href="{% url 'lista_generos' %}" class="medida" style="--atraso:220ms">
-        <span class="numeral">{{ total_generos }}</span>
-        <span class="rotulo">Gêneros</span>
-    </a>
-    <a href="{% url 'lista_avaliacoes' %}" class="medida" style="--atraso:330ms">
-        <span class="numeral">{{ total_avaliacoes }}</span>
-        <span class="rotulo">Avaliações</span>
-    </a>
-</div>
-
 {% if destaque %}
-<div class="destaque">
-    <span class="rotulo">Maior média do catálogo</span>
-    <div class="titulo">{{ destaque.titulo }}</div>
-    <p class="meta">
-        {{ destaque.genero }} <span class="sep">·</span> dirigido por {{ destaque.diretor }}
-        <span class="sep">·</span> média <strong>{{ destaque.media|floatformat:1 }}</strong> de 5
-    </p>
-</div>
+<section class="heroi" style="--matiz: {{ destaque.genero.matiz }}; --inclinacao: {{ destaque.genero.inclinacao }}deg">
+    <span class="heroi-campo" aria-hidden="true"></span>
+    <span class="heroi-varredura" aria-hidden="true"></span>
+
+    <a href="{% url 'detalhe_filme' destaque.pk %}" class="heroi-capa">
+        {% include 'catalogo/_capa.html' with filme=destaque vt=1 %}
+    </a>
+
+    <div class="heroi-texto">
+        <span class="rotulo">Maior média do catálogo</span>
+        <h1 class="heroi-titulo">{{ destaque.titulo }}</h1>
+        <p class="heroi-meta">{{ destaque.genero }} <span class="sep">·</span> {{ destaque.diretor }}</p>
+        <div class="heroi-nota">
+            <span class="heroi-media">{{ destaque.media|floatformat:1 }}</span>
+            <span class="rotulo">de 5</span>
+        </div>
+        <div class="acoes">
+            <a href="{% url 'detalhe_filme' destaque.pk %}" class="acao acao-forte">Abrir</a>
+            <a href="{% url 'criar_filme' %}" class="acao">Novo filme</a>
+        </div>
+    </div>
+</section>
 {% endif %}
+
+<section class="instrumentos">
+    <a href="{% url 'lista_filmes' %}" class="instrumento" style="--alvo: {{ total_filmes }}; --atraso: 120ms" aria-label="{{ total_filmes }} filmes">
+        <span class="instrumento-numero" aria-hidden="true"></span>
+        <span class="rotulo">Filmes</span>
+        <span class="instrumento-trilho" aria-hidden="true"><i></i></span>
+    </a>
+    <a href="{% url 'lista_diretores' %}" class="instrumento" style="--alvo: {{ total_diretores }}; --atraso: 210ms" aria-label="{{ total_diretores }} diretores">
+        <span class="instrumento-numero" aria-hidden="true"></span>
+        <span class="rotulo">Diretores</span>
+        <span class="instrumento-trilho" aria-hidden="true"><i></i></span>
+    </a>
+    <a href="{% url 'lista_generos' %}" class="instrumento" style="--alvo: {{ total_generos }}; --atraso: 300ms" aria-label="{{ total_generos }} gêneros">
+        <span class="instrumento-numero" aria-hidden="true"></span>
+        <span class="rotulo">Gêneros</span>
+        <span class="instrumento-trilho" aria-hidden="true"><i></i></span>
+    </a>
+    <a href="{% url 'lista_avaliacoes' %}" class="instrumento" style="--alvo: {{ total_avaliacoes }}; --atraso: 390ms" aria-label="{{ total_avaliacoes }} avaliações">
+        <span class="instrumento-numero" aria-hidden="true"></span>
+        <span class="rotulo">Avaliações</span>
+        <span class="instrumento-trilho" aria-hidden="true"><i></i></span>
+    </a>
+</section>
 
 <h2 class="faixa-titulo">Últimos filmes cadastrados</h2>
 <div class="faixa">
@@ -62,7 +72,7 @@
         <div class="nome">{{ avaliacao.filme.titulo }}</div>
         <div class="sub">
             {% include 'catalogo/_estrelas.html' with avaliacao=avaliacao %}
-            <br>{{ avaliacao.autor }} · {{ avaliacao.criado_em|date:"d/m/Y" }}
+            <br>{{ avaliacao.autor }}
         </div>
     </a>
     {% empty %}
