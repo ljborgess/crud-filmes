@@ -1183,3 +1183,32 @@ input, textarea, select { caret-color: var(--golpe); }
     .heroi-campo, .heroi-varredura { animation: none; }
     .instrumento-numero { animation: none; --contagem: var(--alvo); }
 }
+
+/* --- ajustes de semântica: as faixas e instrumentos viraram listas ------ */
+
+.instrumentos, .faixa { list-style: none; padding: 0; margin: 0; }
+.instrumentos > li { display: block; }
+.faixa > li { flex: 0 0 auto; list-style: none; }
+.faixa > li > .item { width: 100%; }
+
+.item .nome, .item .sub { display: block; }
+.item .autor { display: block; margin-top: 4px; }
+
+/* título que existe para leitor de tela, não para a tela */
+.oculto {
+    position: absolute;
+    width: 1px; height: 1px;
+    margin: -1px; padding: 0; border: 0;
+    clip-path: inset(50%);
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+/* o número é gerado por CSS; o rótulo repete o valor para quem não o vê */
+.instrumento .rotulo { font-size: 0.72rem; }
+
+.heroi-titulo a, .heroi-meta a { color: inherit; text-decoration: none; }
+.heroi-meta a { transition: color var(--beat) var(--saida); }
+.heroi-meta a:hover { color: var(--golpe-claro); }
+.heroi-titulo a:hover { color: var(--golpe); }
+.heroi-nota { margin: 0 0 26px; }
