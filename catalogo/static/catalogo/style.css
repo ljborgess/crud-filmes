@@ -78,18 +78,6 @@ h1, h2, h3,
     color: var(--osso-fraco);
 }
 
-/* A assinatura do mundo: a letra é feita da malha, não pintada por cima dela.
-   As linhas escuras recortam o tecido de bronze de dentro da própria forma. */
-.malhado {
-    background-image:
-        repeating-linear-gradient(0deg, rgba(4, 6, 12, 0.62) 0 1px, transparent 1px 4px),
-        repeating-linear-gradient(90deg, rgba(4, 6, 12, 0.4) 0 1px, transparent 1px 4px),
-        linear-gradient(var(--cor-base, var(--osso)), var(--cor-base, var(--osso)));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
 p { max-width: 68ch; }
 
 /* --- topo --------------------------------------------------------------- */
@@ -175,13 +163,7 @@ main.estreito {
     font-size: clamp(2rem, 6.4vw, 5.4rem);
     line-height: 1.02;
     padding-top: 0.06em;
-    background-image:
-        repeating-linear-gradient(0deg, rgba(4, 6, 12, 0.62) 0 1px, transparent 1px 4px),
-        repeating-linear-gradient(90deg, rgba(4, 6, 12, 0.4) 0 1px, transparent 1px 4px),
-        linear-gradient(var(--osso), var(--osso));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: var(--osso);
 }
 
 h2.faixa-titulo {
@@ -213,13 +195,7 @@ h2.faixa-titulo {
     display: block;
     font-size: clamp(3.6rem, 8vw, 6.4rem);
     line-height: 1.04;
-    background-image:
-        repeating-linear-gradient(0deg, rgba(4, 6, 12, 0.55) 0 1px, transparent 1px 4px),
-        repeating-linear-gradient(90deg, rgba(4, 6, 12, 0.35) 0 1px, transparent 1px 4px),
-        linear-gradient(var(--golpe), var(--golpe));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: var(--golpe);
     filter: drop-shadow(0 0 16px rgba(255, 122, 28, 0.55));
     transition: filter var(--beat) var(--saida);
     animation: golpear calc(var(--beat) * 2) var(--saida) backwards;
@@ -258,13 +234,7 @@ h2.faixa-titulo {
     margin: 12px 0 14px;
     text-wrap: balance;
     max-width: calc(100vw - 2.6rem);
-    background-image:
-        repeating-linear-gradient(0deg, rgba(4, 6, 12, 0.62) 0 1px, transparent 1px 4px),
-        repeating-linear-gradient(90deg, rgba(4, 6, 12, 0.4) 0 1px, transparent 1px 4px),
-        linear-gradient(var(--osso), var(--osso));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: var(--osso);
 }
 
 .destaque .meta {
@@ -582,13 +552,7 @@ h2.faixa-titulo {
     line-height: 1.06;
     padding-top: 0.06em;
     margin: 6px 0 10px;
-    background-image:
-        repeating-linear-gradient(0deg, rgba(4, 6, 12, 0.62) 0 1px, transparent 1px 4px),
-        repeating-linear-gradient(90deg, rgba(4, 6, 12, 0.4) 0 1px, transparent 1px 4px),
-        linear-gradient(var(--osso), var(--osso));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: var(--osso);
 }
 
 /* o registro condenado já decai antes de sumir: sobra só o contorno */
@@ -790,13 +754,7 @@ input, textarea, select { caret-color: var(--golpe); }
     letter-spacing: -0.03em;
     margin: 0 0 14px;
     max-width: calc(100vw - 2.6rem);
-    background-image:
-        repeating-linear-gradient(0deg, rgba(4, 6, 12, 0.62) 0 1px, transparent 1px 4px),
-        repeating-linear-gradient(90deg, rgba(4, 6, 12, 0.4) 0 1px, transparent 1px 4px),
-        linear-gradient(var(--osso), var(--osso));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: var(--osso);
 }
 
 .detalhe-topo .sinopse {
@@ -872,3 +830,168 @@ input, textarea, select { caret-color: var(--golpe); }
     .detalhe-topo .capa-lugar { max-width: 200px; }
     .grade { grid-template-columns: repeat(auto-fill, minmax(min(100%, 140px), 1fr)); }
 }
+
+/* ==========================================================================
+   Movimento
+   Momento focal: a capa se transforma da grade para o herói do detalhe.
+   O resto é feedback curto — em modo Operate, transição rotineira é rápida.
+   ========================================================================== */
+
+/* --- continuidade entre páginas ----------------------------------------- */
+
+@view-transition { navigation: auto; }
+
+/* a página cede lugar depressa; a capa é que carrega a continuidade */
+::view-transition-old(root) {
+    animation: sair-pagina 90ms var(--saida) both;
+}
+
+::view-transition-new(root) {
+    animation: entrar-pagina 200ms var(--saida) both;
+}
+
+@keyframes sair-pagina {
+    to { opacity: 0; }
+}
+
+@keyframes entrar-pagina {
+    from { opacity: 0; }
+}
+
+/* a capa não some nem reaparece: ela viaja e muda de forma */
+::view-transition-group(*) {
+    animation-duration: 420ms;
+    animation-timing-function: var(--saida);
+}
+
+/* --- entrada da grade ---------------------------------------------------- */
+/* lista aparecendo como lista: escalonamento com teto de atraso */
+
+.grade .cartaz {
+    animation: erguer 420ms var(--saida) backwards;
+    animation-delay: min(calc(var(--ordem, 0) * 55ms), 330ms);
+}
+
+@keyframes erguer {
+    from { opacity: 0; transform: translateY(14px); }
+}
+
+/* --- hover da capa ------------------------------------------------------- */
+
+.capa-campo { transition: filter var(--beat) var(--saida); }
+.capa-malha { transition: opacity var(--beat) var(--saida); }
+
+/* o campo acende e a trama recua: o cátodo é golpeado */
+.cartaz:hover .capa-campo,
+.item:hover .capa-campo { filter: brightness(1.22) saturate(1.1); }
+.cartaz:hover .capa-malha,
+.item:hover .capa-malha { opacity: 0.55; }
+
+.cartaz:focus-visible .capa { transform: translateY(-6px); }
+
+/* --- estrelas: acendem em sequência ------------------------------------- */
+
+.avaliacao-linha .estrelas .cheia {
+    animation: acender 260ms var(--saida) backwards;
+}
+
+.avaliacao-linha .estrelas .cheia:nth-child(1) { animation-delay: 40ms; }
+.avaliacao-linha .estrelas .cheia:nth-child(2) { animation-delay: 90ms; }
+.avaliacao-linha .estrelas .cheia:nth-child(3) { animation-delay: 140ms; }
+.avaliacao-linha .estrelas .cheia:nth-child(4) { animation-delay: 190ms; }
+.avaliacao-linha .estrelas .cheia:nth-child(5) { animation-delay: 240ms; }
+
+@keyframes acender {
+    from { opacity: 0; filter: drop-shadow(0 0 0 rgba(255, 122, 28, 0)); }
+}
+
+/* --- a média do detalhe golpeia ----------------------------------------- */
+
+.media-grande {
+    animation: golpear calc(var(--beat) * 2) var(--saida) backwards;
+    animation-delay: 120ms;
+}
+
+/* --- quem prefere menos movimento não recebe nenhum --------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+}
+
+/* --- mosaico: a relação 1:N virando imagem ------------------------------ */
+
+.mosaico-link { display: block; margin-bottom: 16px; }
+
+.mosaico {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    height: 132px;
+}
+
+.mosaico-carta {
+    width: 88px;
+    flex: 0 0 auto;
+    margin-left: calc(var(--profundidade) * -46px);
+    z-index: calc(3 - var(--profundidade));
+    transform: translateY(calc(var(--profundidade) * 7px)) rotate(calc(var(--profundidade) * 2.2deg));
+    transition: transform 320ms var(--saida), margin-left 320ms var(--saida);
+}
+
+.mosaico-carta:first-child { margin-left: 0; }
+.mosaico-carta .capa { padding: 14% 12%; }
+.mosaico-carta .capa-genero,
+.mosaico-carta .capa-diretor { display: none; }
+.mosaico-carta .capa-titulo { font-size: 0.72rem; line-height: 0.98; }
+
+/* o leque se abre ao passar o mouse: os filmes se separam */
+.mosaico-link:hover .mosaico-carta { margin-left: -22px; transform: translateY(0) rotate(0deg); }
+.mosaico-link:hover .mosaico-carta:first-child { margin-left: 0; }
+
+.mosaico-vazio {
+    width: 88px;
+    aspect-ratio: 2 / 3;
+    border: 1px dashed var(--recusa);
+}
+
+.mosaico-resto {
+    align-self: center;
+    margin-left: 14px;
+    font-family: 'Saira Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 1.15rem;
+    color: var(--golpe);
+}
+
+/* --- capa pequena na lista de avaliações -------------------------------- */
+
+.capa-pequena { display: block; width: 92px; margin-bottom: 14px; }
+.capa-pequena .capa { padding: 14% 12%; }
+.capa-pequena .capa-genero,
+.capa-pequena .capa-diretor { display: none; }
+.capa-pequena .capa-titulo { font-size: 0.72rem; line-height: 0.98; }
+.capa-pequena .capa { transition: transform var(--beat) var(--saida); }
+.capa-pequena:hover .capa { transform: translateY(-5px); }
+
+/* --- entrada: tudo chega, escalonado e curto ---------------------------- */
+
+.faixa .item,
+.registros .registro,
+.avaliacao-linha,
+.medidas .medida {
+    animation: erguer 420ms var(--saida) backwards;
+}
+
+.faixa .item:nth-child(1), .registros .registro:nth-child(1),
+.avaliacao-linha:nth-child(1), .medidas .medida:nth-child(1) { animation-delay: 40ms; }
+.faixa .item:nth-child(2), .registros .registro:nth-child(2),
+.avaliacao-linha:nth-child(2), .medidas .medida:nth-child(2) { animation-delay: 95ms; }
+.faixa .item:nth-child(3), .registros .registro:nth-child(3),
+.avaliacao-linha:nth-child(3), .medidas .medida:nth-child(3) { animation-delay: 150ms; }
+.faixa .item:nth-child(4), .registros .registro:nth-child(4),
+.avaliacao-linha:nth-child(4), .medidas .medida:nth-child(4) { animation-delay: 205ms; }
+.faixa .item:nth-child(n+5), .registros .registro:nth-child(n+5),
+.avaliacao-linha:nth-child(n+5) { animation-delay: 260ms; }
+
+/* o numeral já golpeia por conta própria; não some junto */
+.medidas .medida { animation-name: erguer; }

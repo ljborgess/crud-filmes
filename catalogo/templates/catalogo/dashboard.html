@@ -45,7 +45,7 @@
 <div class="faixa">
     {% for filme in ultimos_filmes %}
     <a href="{% url 'detalhe_filme' filme.pk %}" class="item">
-        {% include 'catalogo/_capa.html' with filme=filme %}
+        {% include 'catalogo/_capa.html' with filme=filme vt=1 %}
         <div class="nome" style="margin-top:14px;">{{ filme.titulo }}</div>
         <div class="sub">{{ filme.genero }} · {{ filme.diretor }}</div>
     </a>

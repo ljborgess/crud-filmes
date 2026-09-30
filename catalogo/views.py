@@ -1,4 +1,4 @@
-from django.db.models import Avg, Count
+from django.db.models import Avg, Count, Prefetch
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import AvaliacaoForm, DiretorForm, FilmeForm, GeneroForm
@@ -114,7 +114,9 @@ def excluir_filme(request, pk):
 # ----------------------------------------------------------------- diretores
 
 def lista_diretores(request):
-    diretores = Diretor.objects.annotate(total_filmes=Count('filmes'))
+    diretores = Diretor.objects.annotate(total_filmes=Count('filmes')).prefetch_related(
+        Prefetch('filmes', queryset=Filme.objects.select_related('genero', 'diretor'))
+    )
     return render(request, 'catalogo/diretor_lista.html', {'diretores': diretores})
 
 
@@ -166,7 +168,9 @@ def excluir_diretor(request, pk):
 # -------------------------------------------------------------------- gêneros
 
 def lista_generos(request):
-    generos = Genero.objects.annotate(total_filmes=Count('filmes'))
+    generos = Genero.objects.annotate(total_filmes=Count('filmes')).prefetch_related(
+        Prefetch('filmes', queryset=Filme.objects.select_related('genero', 'diretor'))
+    )
     return render(request, 'catalogo/genero_lista.html', {'generos': generos})
 
 
@@ -218,7 +222,7 @@ def excluir_genero(request, pk):
 # ---------------------------------------------------------------- avaliações
 
 def lista_avaliacoes(request):
-    avaliacoes = Avaliacao.objects.select_related('filme')
+    avaliacoes = Avaliacao.objects.select_related('filme', 'filme__genero', 'filme__diretor')
     return render(request, 'catalogo/avaliacao_lista.html', {'avaliacoes': avaliacoes})
 
 

@@ -13,11 +13,13 @@
 <div class="registros">
     {% for diretor in diretores %}
     <article class="registro">
-        <span class="indice">{{ forloop.counter|stringformat:"02d" }}</span>
+        <a href="{% url 'detalhe_diretor' diretor.pk %}" class="mosaico-link">
+            {% include 'catalogo/_mosaico.html' with filmes=diretor.filmes.all total=diretor.total_filmes %}
+        </a>
         <h2><a href="{% url 'detalhe_diretor' diretor.pk %}">{{ diretor.nome }}</a></h2>
         <div><span class="atributo">{{ diretor.nacionalidade }}</span></div>
         <div class="medida-linha" style="margin-top:14px;">
-            <strong>{{ diretor.total_filmes }}</strong> filme{{ diretor.total_filmes|pluralize }} no catálogo
+            <strong>{{ diretor.total_filmes }}</strong> filme{{ diretor.total_filmes|pluralize }}
         </div>
         <div class="acoes">
             <a href="{% url 'detalhe_diretor' diretor.pk %}" class="acao">Abrir</a>

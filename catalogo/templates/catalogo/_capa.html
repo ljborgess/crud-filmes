@@ -1,9 +1,15 @@
 {% comment %}
 Capa autoral de um filme. Recebe `filme`.
+
 A matiz vem do gênero e fica na faixa do laranja de cátodo, então dois gêneros
 se distinguem sem que a capa saia das duas cores do sistema.
+
+Passe `vt=1` para a capa participar da transição entre páginas. Só onde o filme
+aparece uma única vez na tela: nome de transição repetido cancela o efeito.
 {% endcomment %}
-<div class="capa" style="--matiz: {{ filme.genero.matiz }}; --inclinacao: {{ filme.genero.inclinacao }}deg" aria-hidden="true">
+<div class="capa"
+     style="--matiz: {{ filme.genero.matiz }}; --inclinacao: {{ filme.genero.inclinacao }}deg{% if vt %}; view-transition-name: capa-{{ filme.pk }}{% endif %}"
+     aria-hidden="true">
     <span class="capa-campo"></span>
     <span class="capa-malha"></span>
     <span class="capa-genero">{{ filme.genero }}</span>

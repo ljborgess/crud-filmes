@@ -21,8 +21,8 @@
 <h2 class="faixa-titulo">Filmes deste gênero</h2>
 <div class="grade">
     {% for filme in filmes %}
-    <a href="{% url 'detalhe_filme' filme.pk %}" class="cartaz">
-        {% include 'catalogo/_capa.html' with filme=filme %}
+    <a href="{% url 'detalhe_filme' filme.pk %}" class="cartaz" style="--ordem: {{ forloop.counter0 }}">
+        {% include 'catalogo/_capa.html' with filme=filme vt=1 %}
         <div class="abaixo">
             <span class="nome">{{ filme.titulo }}</span>
             {% if filme.media %}<span class="nota">{{ filme.media|floatformat:1 }}</span>{% endif %}

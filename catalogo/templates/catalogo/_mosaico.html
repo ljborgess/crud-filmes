@@ -1,0 +1,17 @@
+{% comment %}
+Mosaico das capas de um conjunto de filmes. Recebe `filmes` e `total`.
+
+É a relação 1:N virando imagem: o cartão do diretor mostra os filmes dele.
+As capas aqui não participam da transição entre páginas, porque o mesmo filme
+pode aparecer em mais de um mosaico da mesma tela.
+{% endcomment %}
+<div class="mosaico">
+    {% for filme in filmes|slice:":3" %}
+    <div class="mosaico-carta" style="--profundidade: {{ forloop.counter0 }}">
+        {% include 'catalogo/_capa.html' with filme=filme %}
+    </div>
+    {% empty %}
+    <div class="mosaico-vazio"></div>
+    {% endfor %}
+    {% if total > 3 %}<span class="mosaico-resto">+{{ total|add:"-3" }}</span>{% endif %}
+</div>

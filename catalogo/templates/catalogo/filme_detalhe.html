@@ -5,7 +5,7 @@
 {% block conteudo %}
 <div class="detalhe-topo">
     <div class="capa-lugar">
-        {% include 'catalogo/_capa.html' with filme=filme %}
+        {% include 'catalogo/_capa.html' with filme=filme vt=1 %}
     </div>
 
     <div>
@@ -58,7 +58,7 @@
 <div class="faixa">
     {% for outro in do_mesmo_diretor %}
     <a href="{% url 'detalhe_filme' outro.pk %}" class="item" style="width:clamp(150px,16vw,190px);">
-        {% include 'catalogo/_capa.html' with filme=outro %}
+        {% include 'catalogo/_capa.html' with filme=outro vt=1 %}
         <div class="nome" style="margin-top:12px;">{{ outro.titulo }}</div>
     </a>
     {% endfor %}

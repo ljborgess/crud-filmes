@@ -13,10 +13,12 @@
 <div class="registros">
     {% for genero in generos %}
     <article class="registro">
-        <span class="indice">{{ forloop.counter|stringformat:"02d" }}</span>
+        <a href="{% url 'detalhe_genero' genero.pk %}" class="mosaico-link">
+            {% include 'catalogo/_mosaico.html' with filmes=genero.filmes.all total=genero.total_filmes %}
+        </a>
         <h2><a href="{% url 'detalhe_genero' genero.pk %}">{{ genero.nome }}</a></h2>
         <div class="medida-linha" style="margin-top:14px;">
-            <strong>{{ genero.total_filmes }}</strong> filme{{ genero.total_filmes|pluralize }} neste gênero
+            <strong>{{ genero.total_filmes }}</strong> filme{{ genero.total_filmes|pluralize }}
         </div>
         <div class="acoes">
             <a href="{% url 'detalhe_genero' genero.pk %}" class="acao">Abrir</a>
